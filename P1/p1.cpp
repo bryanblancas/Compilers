@@ -1,27 +1,112 @@
 #include <iostream>
 #include <vector>
+#include <string.h>
 #include <fstream>
 #include <iterator>
 #include "transition.cpp"
+#include "functionsigma.cpp"
+
+#define azul "\x1B[36m"
+#define verde "\x1B[32m"
+#define amarillo "\x1B[33m"
+#define rojo "\033[0;31m"
+#define cerrar "\x1B[00m"
+
+char cad[40];
+vector<FunctionSigma> trace, error;
 
 using namespace std;
 
 void read(vector <char> *states, vector <char> *alphabet, vector <char> *final_states, char *initial_state, vector <Transition> *trans_func);
 void complete_automata(vector <char> *states,vector <char> *alphabet, vector <Transition> *trans_func);
 int exists(char state, char symbol, vector <Transition> *trans_func);
+vector<char> next_states(vector <Transition> *trans_func, char current_state, char symbol);
+int string_analysis(char current_state, int symbol_position, vector <Transition> *trans_func, vector<char> *final_states, vector<char> *alphabet);
 
 int main(int argc, char const *argv[]){
 
 	//variables pertenecientes a la quintupla del autómata
 	vector <char> states, alphabet, final_states;
-	char initial_state;
 	vector <Transition> trans_func;
+	char initial_state;
+	int status;
 
 	read(&states, &alphabet, &final_states, &initial_state, &trans_func);
 
 	complete_automata(&states, &alphabet, &trans_func);
 
+	while(true){
+
+		trace.clear();
+		error.clear();
+
+		cout << "\n\nIntroduce la cadena: ";
+		cin.getline(cad, 40);
+
+		if(cad != "salir"){
+		
+			status = string_analysis(initial_state, 0, &trans_func, &final_states, &alphabet);
+
+			if(status){
+				cout << azul <<"\n\tLA CADENA ES VÁLIDA\n\n" << cerrar << verde << " RUTA\n\n" << cerrar;
+				for(int i=trace.size()-1; i>=0; i--){
+					FunctionSigma fs = trace.at(i);
+					cout << verde << fs.state << "(" << fs.symbol << ") -> " << cerrar; 
+				}
+				cout << rojo <<"\n\n ERRORES \n\n" << cerrar;
+				for(int i=0; i<error.size(); i++){
+					FunctionSigma fs = error.at(i);
+					cout << rojo << fs.state << "(" << fs.symbol << ")" << cerrar << endl; 
+				}
+				cout << "\n\n";
+			}
+			else 
+				cout << rojo <<"\n\n\tLA CADENA NO ES VÁLIDA\n\n" << cerrar;
+		}
+	}
 	return 0;
+}
+
+int string_analysis(char current_state, int symbol_position, vector <Transition> *trans_func, vector<char> *final_states, vector<char> *alphabet){
+	vector<char> v;
+	int status, yes = 0;
+
+	if(symbol_position >= strlen(cad)){
+		//cout << "\n\n" << azul << "Estado final: " << cerrar << current_state << "\n\n";
+		for(int i = 0; i < final_states->size(); i++)
+			if(current_state == final_states -> at(i)) {
+				FunctionSigma fs(current_state, ' ');
+				trace.push_back(fs); 
+				//cout << current_state << " ";
+				return 1;
+			}
+		return 0;
+	}
+	else{
+		v = next_states(trans_func, current_state, cad[symbol_position]);
+		if(v.size() == 0){
+			FunctionSigma fs(current_state, cad[symbol_position]);
+			error.push_back(fs);
+			//cout << "NO EXISTE " << current_state << "(" << cad[symbol_position] << ")\n";
+			status = string_analysis(current_state, ++symbol_position, trans_func, final_states, alphabet);
+			if(status){	
+				yes = 1;
+			}
+		}
+		else{
+			for(int j = 0; j < v.size(); j++){
+				status = string_analysis(v.at(j), ++symbol_position, trans_func, final_states, alphabet); symbol_position--;
+				if(status){	
+					yes = 1;
+					FunctionSigma fs(current_state, cad[symbol_position]);
+					trace.push_back(fs);
+					//cout << current_state << "(" << cad[symbol_position] << ") ";
+				}
+			}	
+		}
+	}
+
+	return yes;
 }
 
 void read(vector <char> *states, vector <char> *alphabet, vector <char> *final_states, char *initial_state, vector <Transition> *trans_func){
@@ -79,6 +164,16 @@ int exists(char state, char symbol, vector <Transition> *trans_func){
 				return 1;
 	}
 	return 0;
+}
+
+vector<char> next_states(vector <Transition> *trans_func, char current_state, char symbol){
+	vector<char> v;
+	for(int i = 0 ; i < trans_func->size(); i++){
+		Transition f = trans_func -> at(i);
+		if(current_state == f.current_state && symbol == f.symbol)
+				v.push_back(f.next_state);
+	}
+	return v;
 }
 
 
