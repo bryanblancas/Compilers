@@ -1,16 +1,16 @@
 #include <iostream>
-
+#include <string>
 using namespace std;
 
 class Transition{
 	public:
-		char current_state;
+		string current_state;
 		char symbol;
-		char next_state;
-		Transition(char a, char b, char c);	
+		string next_state;
+		Transition(string a, char b, string c);	
 };
 
-Transition::Transition(char a, char b, char c){
+Transition::Transition(string a, char b, string c){
 	current_state = a;
 	symbol = b;
 	next_state = c;
