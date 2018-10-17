@@ -80,6 +80,9 @@ int exists(string state, char symbol, vector <Transition> trans_func){
 	return 0;
 }
 void automata::complete_automata(){	
+	//Agregar epsilon como caracter del alfabeto para completar el autómata
+	//alphabet.push_back('E');
+
 	for(auto str_state:states)
 		for(auto ch_alphabet:alphabet)
 			if(!exists(str_state, ch_alphabet, trans_func)){

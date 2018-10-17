@@ -8,6 +8,7 @@
 
 
 int string_analysis(string current_state, int symbol_position, automata *a, string cad, string trace, string error);
+int is_final_state(automata *a,string current_state, string *trace, string *error);
 
 int main(int argc, char const *argv[]){
 	
@@ -36,37 +37,56 @@ int main(int argc, char const *argv[]){
 	return 0;
 }
 
-int string_analysis(string current_state, int symbol_position, automata *a, string cad, string trace, string error){
-	vector<string> v;
-	int status, yes = 0;
-
-	if(symbol_position == cad.size()){
-		for(auto n: a -> final_states)
-			if(current_state == n) {
-				trace += n;
-				cout << azul <<"\n\tCADENA VÁLIDA\n" << cerrar;
-				cout << verde << trace << cerrar <<endl;
-				if(error != ""){
-					cout << amarillo <<"\n\tERRORES LOCALES\n" << cerrar;
-					cout << amarillo << error << cerrar <<endl;
-				}
-				else
-					cout << amarillo << "\n\tSIN ERRORES" << cerrar;
-				return 1;
+int is_final_state(automata *a,string current_state, string *trace, string *error){	
+	for(auto n: a -> final_states)
+		if(current_state == n) {
+			*trace += n;
+			cout << azul <<"\n\tCADENA VÁLIDA\n" << cerrar;
+			cout << verde << *trace << cerrar <<endl;
+			if(*error != ""){
+				cout << amarillo <<"\n\tERRORES LOCALES\n" << cerrar;
+				cout << amarillo << *error << cerrar <<endl;
 			}
-		return 0;
+			else
+				cout << amarillo << "\n\tSIN ERRORES" << cerrar;
+			return 1;
+		}
+	return 0;
+}
+
+int string_analysis(string current_state, int symbol_position, automata *a, string cad, string trace, string error){
+	vector<string> v, b;
+	int status, yes = 0;
+	
+	if(symbol_position == cad.size()){
+		return is_final_state(a, current_state, &trace, &error);
 	}
 	else{
-		v = a -> next_states(current_state, cad[symbol_position]);
+		//CHECHAR ESTO 
+		string aux = trace, aux1 = error;
+		is_final_state(a,current_state, &trace, &error);
+		trace = aux;error = aux1;
+		//HASTA AQUÍ
 
+		v = a -> next_states(current_state, cad[symbol_position]);
+		
 		if(v.size() == 0){
 			error += current_state + "(" + cad[symbol_position] + ")  ";
-			status = string_analysis(current_state, ++symbol_position, a, cad, trace, error);
-			if(status)
-				yes = 1;
+			return string_analysis(current_state, ++symbol_position, a, cad, trace, error);
 		}
-
 		else{
+			
+			b = a -> next_states(current_state, 'E');
+			for(auto n: b){			
+				string aux = trace;
+				trace += current_state + "(E) -> ";
+				//cout << current_state + "(E) iré a " + n << endl; 
+				status = string_analysis(n, symbol_position, a, cad, trace, error);
+				if(status)
+					yes = 1;
+				trace = aux;
+			}
+
 			for(auto n: v){
 				string aux = trace;
 				trace += current_state + "(" + cad[symbol_position]+") -> ";
@@ -74,7 +94,8 @@ int string_analysis(string current_state, int symbol_position, automata *a, stri
 				if(status)
 					yes = 1;
 				trace = aux;
-			}	
+			}
+
 		}
 	}
 
