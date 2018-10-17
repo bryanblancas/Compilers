@@ -20,6 +20,10 @@ int main(int argc, char const *argv[]){
 	cout << "\n\n COMPLEMENTO DEL AUTÓMATA \n\n";  
 	for(auto n:a.trans_func)
 		cout << "\t" << n.current_state << "," << n.symbol << "," << n.next_state << endl;
+	//COMPLETAR AUTÓMATA EN TRANSICIONES EPSILON A EL ESTADO DE ERROR, NO SE GUARDA EN trans_func PARA EVITAR QUE SE CICLE INFINITAMENTE
+	for(auto str_state : a.states)
+		if(!exists(str_state, 'E', a.trans_func))
+			cout << "\t" << str_state << "," << "E,x\n";
 
 	while(true){
 		cout << "\n\nIntroduce la cadena: ";
@@ -59,14 +63,13 @@ int string_analysis(string current_state, int symbol_position, automata *a, stri
 	int status, yes = 0;
 	
 	if(symbol_position == cad.size()){
+		//ÉSTO ES PARA CHECAR SI EL ESTADO ACTUAL, EL CUAL COINCIDE CON EL FIN DE LA CADENA, TIENE TRANSICIONES EPSILON
 		b = a -> next_states(current_state, 'E');
 		for(auto n: b){			
-			string aux = trace;
+			string aux = trace; 
 			trace += current_state + "(E) -> ";
-			//cout << current_state + "(E) iré a " + n << endl; 
 			status = string_analysis(n, symbol_position, a, cad, trace, error);
-			if(status)
-				yes = 1;
+			if(status) yes = 1;
 			trace = aux;
 		}
 
@@ -80,10 +83,9 @@ int string_analysis(string current_state, int symbol_position, automata *a, stri
 		//string aux = trace, aux1 = error;
 		//is_final_state(a,current_state, &trace, &error);
 		//trace = aux;error = aux1;
-		//HASTA AQUÍ
+		//HASTA AQUÍ	
 
 		v = a -> next_states(current_state, cad[symbol_position]);
-		
 		if(v.size() == 0){
 			error += current_state + "(" + cad[symbol_position] + ")  ";
 			return string_analysis(current_state, ++symbol_position, a, cad, trace, error);
@@ -94,10 +96,8 @@ int string_analysis(string current_state, int symbol_position, automata *a, stri
 			for(auto n: b){			
 				string aux = trace;
 				trace += current_state + "(E) -> ";
-				//cout << current_state + "(E) iré a " + n << endl; 
 				status = string_analysis(n, symbol_position, a, cad, trace, error);
-				if(status)
-					yes = 1;
+				if(status) yes = 1;
 				trace = aux;
 			}
 
@@ -105,8 +105,7 @@ int string_analysis(string current_state, int symbol_position, automata *a, stri
 				string aux = trace;
 				trace += current_state + "(" + cad[symbol_position]+") -> ";
 				status = string_analysis(n, ++symbol_position, a, cad, trace, error); symbol_position--;
-				if(status)
-					yes = 1;
+				if(status) yes = 1;
 				trace = aux;
 			}
 
