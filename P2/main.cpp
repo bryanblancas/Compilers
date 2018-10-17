@@ -59,13 +59,27 @@ int string_analysis(string current_state, int symbol_position, automata *a, stri
 	int status, yes = 0;
 	
 	if(symbol_position == cad.size()){
-		return is_final_state(a, current_state, &trace, &error);
+		b = a -> next_states(current_state, 'E');
+		for(auto n: b){			
+			string aux = trace;
+			trace += current_state + "(E) -> ";
+			//cout << current_state + "(E) iré a " + n << endl; 
+			status = string_analysis(n, symbol_position, a, cad, trace, error);
+			if(status)
+				yes = 1;
+			trace = aux;
+		}
+
+		status = is_final_state(a, current_state, &trace, &error);
+		if(status)
+			yes = 1;
+		return yes;
 	}
 	else{
 		//CHECHAR ESTO 
-		string aux = trace, aux1 = error;
-		is_final_state(a,current_state, &trace, &error);
-		trace = aux;error = aux1;
+		//string aux = trace, aux1 = error;
+		//is_final_state(a,current_state, &trace, &error);
+		//trace = aux;error = aux1;
 		//HASTA AQUÍ
 
 		v = a -> next_states(current_state, cad[symbol_position]);
