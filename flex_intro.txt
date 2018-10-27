@@ -1,0 +1,46 @@
+
+FLEX:
+	Generador de analizadores léxicos.
+	Recibe expresiones regulares y cuando las compila genera AFN o AFD que evaluan a los lenguajes introducidos.
+
+	Estructura: 
+		ejemplo.l
+		---------------------
+		|Declaraciones					
+		|	%%				
+		|Reglas
+		|	%%
+		|Código C
+		|	%%
+
+	Compilación:
+		flex ejemplo.l  
+		genera >> lex.yy.c con una función yylex();
+
+		gcc lex.yy.c -|f|
+
+	código en ejemplo.l
+	---------------------------
+		Dígito 	[0-9]
+		Dígitos {Dígito}+
+		
+		%%
+		
+		//expresiónRegular - Acción
+		{Dígitos} {printf("dígito")}
+
+		%%
+
+		Código en c
+
+
+Hola mundo básico en flex
+
+--------------------------
+%%
+aa 	{printf("1");}
+aab {printf("2");}
+XU 	{printf("3");}
+UV 	{printf("4");}
+-------------------------- 
+
