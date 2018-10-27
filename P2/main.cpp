@@ -20,10 +20,6 @@ int main(int argc, char const *argv[]){
 	cout << "\n\n COMPLEMENTO DEL AUTÓMATA \n\n";  
 	for(auto n:a.trans_func)
 		cout << "\t" << n.current_state << "," << n.symbol << "," << n.next_state << endl;
-	//COMPLETAR AUTÓMATA EN TRANSICIONES EPSILON A EL ESTADO DE ERROR, NO SE GUARDA EN trans_func PARA EVITAR QUE SE CICLE INFINITAMENTE
-	for(auto str_state : a.states)
-		if(!exists(str_state, 'E', a.trans_func))
-			cout << "\t" << str_state << "," << "E,x\n";
 
 	while(true){
 		cout << "\n\nIntroduce la cadena: ";
