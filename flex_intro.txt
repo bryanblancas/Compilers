@@ -17,7 +17,7 @@ FLEX:
 		flex ejemplo.l  
 		genera >> lex.yy.c con una función yylex();
 
-		gcc lex.yy.c -|f|
+		gcc lex.yy.c -lfl -o archivo
 
 	código en ejemplo.l
 	---------------------------
