@@ -75,11 +75,6 @@ int string_analysis(string current_state, int symbol_position, automata *a, stri
 		return yes;
 	}
 	else{
-		//CHECHAR ESTO 
-		//string aux = trace, aux1 = error;
-		//is_final_state(a,current_state, &trace, &error);
-		//trace = aux;error = aux1;
-		//HASTA AQUÍ	
 
 		v = a -> next_states(current_state, cad[symbol_position]);
 		if(v.size() == 0){
