@@ -1,0 +1,24 @@
+Gramática:
+	Conjunto de reglas que definen un lenguaje.
+
+G=(T,N,S,P)
+
+	T: Símbolos terminales (alfabeto)
+	N: Símbolos no terminales (variables)
+	S: Símbolo inicil
+	P: Reglas de producción
+
+Tipos de gramáticas:
+	3: lenguajes regulares (validados por un autómata finito)
+	2: lenguajes libres de contexto (son validados por autómata de pila)
+
+Derivaciones:
+	Sustitución de símbolos no terminales por terminales, para validar una cadena.
+	Una cadena w perteneciente T es derivable si y sólo sí se puede llegar a ella con una serie de derivacioens desde el símbolo inicial.
+
+Árbol de derivación:
+	Sirve la ambigüedad de las gramáticas ES SÓLO UN MEDIO GRÁFICO PARA VER LA REGLAS
+
+
+Gramática ambigüa:
+	Permite que una cadea terminal tenga más de un árbol de derivación. Esta gramática no es la indicada para describir un lenguaje de programación.
