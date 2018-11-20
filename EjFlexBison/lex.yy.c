@@ -778,7 +778,7 @@ YY_RULE_SETUP
 case 9:
 YY_RULE_SETUP
 #line 34 "lex.l"
-{printf("Error lexico en linea");}
+{printf("ASCII CODE: %d\n", yytext[0]);}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP

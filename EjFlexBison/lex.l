@@ -31,7 +31,7 @@ STRING [A-Za-z]+
 				return (STRING);
 			}
 
-.           {printf("Error lexico en linea");}
+.           {printf("ASCII CODE: %d\n", yytext[0]);}
 
 %%
 
