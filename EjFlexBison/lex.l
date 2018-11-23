@@ -24,12 +24,14 @@ STRING [A-Za-z]+
 "/"         {	return (DIV);}
 ";"         {	return (PTOCOMA);}
 
+exit		{	return 0;}
+
 {STRING}	{	char *cad = (char*) malloc(sizeof(char) * (yyleng+1));
 				mystrcpy(cad);
 				yylval.string = cad;
-				//printf(" -> %s\n", cad);
 				return (STRING);
 			}
+
 
 .           {printf("ASCII CODE: %d\n", yytext[0]);}
 

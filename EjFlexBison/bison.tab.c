@@ -1240,7 +1240,7 @@ yyreduce:
     {
         case 5:
 #line 59 "bison.y" /* yacc.c:1646  */
-    { printf("%s\n", (yyvsp[-1].string));}
+    { printf("%s\n", (yyvsp[-1].string)); free((yyvsp[-1].string));}
 #line 1245 "bison.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1632,6 +1632,7 @@ void yyerror(char *s){
 }
 
 int main(int argc,char **argv){
+  printf("Calculadora Simple de Enteros y Decimales y Concatenación de Cadenas;\n");
   yyparse();
   return 0;
 }

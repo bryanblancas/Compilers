@@ -56,7 +56,7 @@ input:    /*CADENA VACÍA*/
 ;
 
 //VarNoTerminal de la operación con str, para ver cuando acaba e imprimirla
-cadena:   str PTOCOMA   { printf("%s\n", $1);}
+cadena:   str PTOCOMA   { printf("%s\n", $1); free($1);}
 ;
 
 str :  STRING { $$ = $1; }
@@ -116,6 +116,7 @@ void yyerror(char *s){
 }
 
 int main(int argc,char **argv){
+  printf("Calculadora Simple de Enteros y Decimales y Concatenación de Cadenas;\n");
   yyparse();
   return 0;
 }
