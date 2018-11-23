@@ -62,7 +62,8 @@ cadena:   str PTOCOMA   { printf("%s\n", $1); free($1);}
 str :  STRING { $$ = $1; }
   |    str MAS str  { int uno = tam($1), dos = tam($3), i;
                       $$ = (char*) malloc(sizeof(char)*((uno+dos)+1));
-                      mystrcat($$, $1, uno, $3, dos);}
+                      mystrcat($$, $1, uno, $3, dos);
+                      free($1); free($3);}
 ;
 
 //VarNoTerminal de las operaciones aritméticas, para ver cuando acaba e imprimirla
