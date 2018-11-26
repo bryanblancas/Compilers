@@ -29,7 +29,6 @@ exit		{	return 0;}
 {STRING}	{	char *cad = (char*) malloc(sizeof(char) * (yyleng-1));
 				mystrcpy(cad);
 				yylval.string = cad;
-				//printf(" --> %s\n", cad);
 				return (STRING);
 			}
 
@@ -39,15 +38,10 @@ exit		{	return 0;}
 %%
 
 void mystrcpy(char* a){
-	int i, j = 0;
-	for(i = 0; i < yyleng; i++)
-		if(yytext[i] != '"')
-			a[j++] = yytext[i];
-	a[j] = '\0';
-
-	/*
-	while(yytext[i+2])
-		aux[i] = yytext[i+1]
-		i++
-		*/
+	int i = 0;
+	while(yytext[i+2]){
+		a[i] = yytext[i+1];
+		i++;
+	}
+	a[i] = '\0';
 }

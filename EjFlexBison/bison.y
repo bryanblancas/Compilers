@@ -9,7 +9,7 @@
   extern char *yytext;
   void yyerror(char *s);
   int tam(char *a);
-  void mystrcat(char *a, char *b, int uno, char *c, int dos);
+  void mystrcat(char *a, char *b, char *c);
 %}
 //DEFINICIÓN DE LA GRAMÁTICA
 
@@ -60,9 +60,8 @@ cadena:   str PTOCOMA   { printf("%s\n", $1); free($1);}
 ;
 
 str :  STRING { $$ = $1; }
-  |    str MAS str  { int uno = tam($1), dos = tam($3), i;
-                      $$ = (char*) malloc(sizeof(char)*((uno+dos)+1));
-                      mystrcat($$, $1, uno, $3, dos);
+  |    str MAS str  { $$ = (char*) malloc(sizeof(char) * ((tam($1) + tam($3)) + 1));
+                      mystrcat($$, $1, $3);
                       free($1); free($3);}
 ;
 
@@ -99,15 +98,15 @@ exp_decimal :       DECIMAL                {$$ = $1;}
 
 int tam(char *a){
   int i=0;
-  while(a[i++] != '\0');
+  while(a[i++]);
   return i-1;
 }
 
-void mystrcat(char *a, char *b, int uno, char *c, int dos){
+void mystrcat(char *a, char *b, char *c){
   int i;
-  for(i=0; i<uno;i++)
+  for(i=0; i < tam(b);i++)
     a[i] = b[i];
-  for(int j=0; j<dos; j++)
+  for(int j=0; j < tam(c); j++)
     a[i++] = c[j];
   a[i] = '\0';
 }

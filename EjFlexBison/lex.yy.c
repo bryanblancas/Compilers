@@ -785,21 +785,20 @@ YY_RULE_SETUP
 {	char *cad = (char*) malloc(sizeof(char) * (yyleng-1));
 				mystrcpy(cad);
 				yylval.string = cad;
-				//printf(" --> %s\n", cad);
 				return (STRING);
 			}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 37 "lex.l"
+#line 36 "lex.l"
 {printf("ASCII CODE: %d\n", yytext[0]);}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 39 "lex.l"
+#line 38 "lex.l"
 ECHO;
 	YY_BREAK
-#line 803 "lex.yy.c"
+#line 802 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1804,19 +1803,14 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 39 "lex.l"
+#line 38 "lex.l"
 
 
 void mystrcpy(char* a){
-	int i, j = 0;
-	for(i = 0; i < yyleng; i++)
-		if(yytext[i] != '"')
-			a[j++] = yytext[i];
-	a[j] = '\0';
-
-	/*
-	while(yytext[i+2])
-		aux[i] = yytext[i+1]
-		i++
-		*/
+	int i = 0;
+	while(yytext[i+2]){
+		a[i] = yytext[i+1];
+		i++;
+	}
+	a[i] = '\0';
 }
