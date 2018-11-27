@@ -66,34 +66,34 @@ input:    /*CADENA VACÍA*/
 ;
 
 //VarNoTerminal de potencia de cadenas, para ver cuando termina he imprimirla
-cad_pow_final:    cadena_pow PTOCOMA    {printf("%s\n", $1); free($1);}
+cad_pow_final:    cadena_pow PTOCOMA    { printf("%s\n", $1); free($1); }
 ;
 
-cadena_pow:   str POW exp_entera      {
-                                        $$ = (char *) malloc((sizeof(char) * tam($1) * val_abs($3))+1);
-                                        pow_cad($$, $1, $3);
-                                        free($1);
-                                      }
-      |       cadena_pow MAS str      {
-                                        $$ = (char*) malloc(sizeof(char) * ((tam($1) + tam($3)) + 1));
-                                        mystrcat($$, $1, $3);
-                                        free($1); free($3);
-                                      }     
-      |       str MAS cadena_pow      {
-                                        $$ = (char*) malloc(sizeof(char) * ((tam($1) + tam($3)) + 1));
-                                        mystrcat($$, $1, $3);
-                                        free($1); free($3);
-                                      }
-      |       cadena_pow POW exp_entera {
-                                          $$ = (char *) malloc((sizeof(char) * tam($1) * val_abs($3))+1);
-                                          pow_cad($$, $1, $3);
-                                          free($1);
-                                        }
-      |       cadena_pow MAS cadena_pow {
-                                          $$ = (char*) malloc(sizeof(char) * ((tam($1) + tam($3)) + 1));
-                                          mystrcat($$, $1, $3);
-                                          free($1); free($3);
-                                        }  
+cadena_pow:   str POW exp_entera          {
+                                            $$ = (char *) malloc((sizeof(char) * tam($1) * val_abs($3))+1);
+                                            pow_cad($$, $1, $3);
+                                            free($1);
+                                          }
+      |       cadena_pow MAS str          {
+                                            $$ = (char*) malloc(sizeof(char) * ((tam($1) + tam($3)) + 1));
+                                            mystrcat($$, $1, $3);
+                                            free($1); free($3);
+                                          }     
+      |       str MAS cadena_pow          {
+                                            $$ = (char*) malloc(sizeof(char) * ((tam($1) + tam($3)) + 1));
+                                            mystrcat($$, $1, $3);
+                                            free($1); free($3);
+                                          }
+      |       cadena_pow POW exp_entera   {
+                                            $$ = (char *) malloc((sizeof(char) * tam($1) * val_abs($3))+1);
+                                            pow_cad($$, $1, $3);
+                                            free($1);
+                                          }
+      |       cadena_pow MAS cadena_pow   {
+                                            $$ = (char*) malloc(sizeof(char) * ((tam($1) + tam($3)) + 1));
+                                            mystrcat($$, $1, $3);
+                                            free($1); free($3);
+                                          }  
       |       PARABRE cadena_pow PARCIERRA { $$ = $2;}                                                                    
 ;
 
@@ -101,7 +101,7 @@ cadena_pow:   str POW exp_entera      {
 cadena:   str PTOCOMA   { printf("%s\n", $1); free($1);}
 ;
 
-str :  STRING { $$ = $1; }
+str :  STRING       { $$ = $1; }
   |    str MAS str  { 
                       $$ = (char*) malloc(sizeof(char) * ((tam($1) + tam($3)) + 1));
                       mystrcat($$, $1, $3);

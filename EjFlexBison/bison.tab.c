@@ -1268,57 +1268,57 @@ yyreduce:
     {
         case 6:
 #line 69 "bison.y" /* yacc.c:1646  */
-    {printf("%s\n", (yyvsp[-1].string)); free((yyvsp[-1].string));}
+    { printf("%s\n", (yyvsp[-1].string)); free((yyvsp[-1].string)); }
 #line 1273 "bison.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
 #line 72 "bison.y" /* yacc.c:1646  */
     {
-                                        (yyval.string) = (char *) malloc((sizeof(char) * tam((yyvsp[-2].string)) * val_abs((yyvsp[0].entero)))+1);
-                                        pow_cad((yyval.string), (yyvsp[-2].string), (yyvsp[0].entero));
-                                        free((yyvsp[-2].string));
-                                      }
+                                            (yyval.string) = (char *) malloc((sizeof(char) * tam((yyvsp[-2].string)) * val_abs((yyvsp[0].entero)))+1);
+                                            pow_cad((yyval.string), (yyvsp[-2].string), (yyvsp[0].entero));
+                                            free((yyvsp[-2].string));
+                                          }
 #line 1283 "bison.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 77 "bison.y" /* yacc.c:1646  */
     {
-                                        (yyval.string) = (char*) malloc(sizeof(char) * ((tam((yyvsp[-2].string)) + tam((yyvsp[0].string))) + 1));
-                                        mystrcat((yyval.string), (yyvsp[-2].string), (yyvsp[0].string));
-                                        free((yyvsp[-2].string)); free((yyvsp[0].string));
-                                      }
+                                            (yyval.string) = (char*) malloc(sizeof(char) * ((tam((yyvsp[-2].string)) + tam((yyvsp[0].string))) + 1));
+                                            mystrcat((yyval.string), (yyvsp[-2].string), (yyvsp[0].string));
+                                            free((yyvsp[-2].string)); free((yyvsp[0].string));
+                                          }
 #line 1293 "bison.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
 #line 82 "bison.y" /* yacc.c:1646  */
     {
-                                        (yyval.string) = (char*) malloc(sizeof(char) * ((tam((yyvsp[-2].string)) + tam((yyvsp[0].string))) + 1));
-                                        mystrcat((yyval.string), (yyvsp[-2].string), (yyvsp[0].string));
-                                        free((yyvsp[-2].string)); free((yyvsp[0].string));
-                                      }
+                                            (yyval.string) = (char*) malloc(sizeof(char) * ((tam((yyvsp[-2].string)) + tam((yyvsp[0].string))) + 1));
+                                            mystrcat((yyval.string), (yyvsp[-2].string), (yyvsp[0].string));
+                                            free((yyvsp[-2].string)); free((yyvsp[0].string));
+                                          }
 #line 1303 "bison.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
 #line 87 "bison.y" /* yacc.c:1646  */
     {
-                                          (yyval.string) = (char *) malloc((sizeof(char) * tam((yyvsp[-2].string)) * val_abs((yyvsp[0].entero)))+1);
-                                          pow_cad((yyval.string), (yyvsp[-2].string), (yyvsp[0].entero));
-                                          free((yyvsp[-2].string));
-                                        }
+                                            (yyval.string) = (char *) malloc((sizeof(char) * tam((yyvsp[-2].string)) * val_abs((yyvsp[0].entero)))+1);
+                                            pow_cad((yyval.string), (yyvsp[-2].string), (yyvsp[0].entero));
+                                            free((yyvsp[-2].string));
+                                          }
 #line 1313 "bison.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
 #line 92 "bison.y" /* yacc.c:1646  */
     {
-                                          (yyval.string) = (char*) malloc(sizeof(char) * ((tam((yyvsp[-2].string)) + tam((yyvsp[0].string))) + 1));
-                                          mystrcat((yyval.string), (yyvsp[-2].string), (yyvsp[0].string));
-                                          free((yyvsp[-2].string)); free((yyvsp[0].string));
-                                        }
+                                            (yyval.string) = (char*) malloc(sizeof(char) * ((tam((yyvsp[-2].string)) + tam((yyvsp[0].string))) + 1));
+                                            mystrcat((yyval.string), (yyvsp[-2].string), (yyvsp[0].string));
+                                            free((yyvsp[-2].string)); free((yyvsp[0].string));
+                                          }
 #line 1323 "bison.tab.c" /* yacc.c:1646  */
     break;
 
