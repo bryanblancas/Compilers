@@ -93,7 +93,8 @@ cadena_pow:   str POW exp_entera      {
                                           $$ = (char*) malloc(sizeof(char) * ((tam($1) + tam($3)) + 1));
                                           mystrcat($$, $1, $3);
                                           free($1); free($3);
-                                        }                                                                       
+                                        }  
+      |       PARABRE cadena_pow PARCIERRA { $$ = $2;}                                                                    
 ;
 
 //VarNoTerminal de la operación con str, para ver cuando acaba e imprimirla
@@ -106,6 +107,7 @@ str :  STRING { $$ = $1; }
                       mystrcat($$, $1, $3);
                       free($1); free($3);
                     }
+  |   PARABRE str PARCIERRA { $$ = $2;}
 ;
 
 //VarNoTerminal de las operaciones aritméticas, para ver cuando acaba e imprimirla
