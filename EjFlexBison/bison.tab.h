@@ -52,7 +52,10 @@ extern int yydebug;
     MENOS = 262,
     POR = 263,
     DIV = 264,
-    PTOCOMA = 265
+    PTOCOMA = 265,
+    POW = 266,
+    PARABRE = 267,
+    PARCIERRA = 268
   };
 #endif
 
@@ -61,13 +64,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 17 "bison.y" /* yacc.c:1909  */
+#line 19 "bison.y" /* yacc.c:1909  */
 
   int entero;
   float decimal;
   char* string;
 
-#line 71 "bison.tab.h" /* yacc.c:1909  */
+#line 74 "bison.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

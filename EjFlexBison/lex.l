@@ -23,6 +23,9 @@ STRING \"[^\"]+\"
 "*"         {	return (POR);}
 "/"         {	return (DIV);}
 ";"         {	return (PTOCOMA);}
+"^"			{	return (POW);}
+"("			{	return (PARABRE);}
+")"			{	return (PARCIERRA);}
 
 exit		{	return 0;}
 
