@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "proyect_bison.tab.h"
+#include "func.h"
 
 void mystrcpy(char* a);
 void mystrcpyvar(char* a);
@@ -50,7 +51,7 @@ pow			{	return (POW);}
 "\n"		{	return (SALTOLINE);}
 
 " "			{}
-.           {printf("ASCII CODE: %d\n", yytext[0]);}
+.           {printf(rojo"Unrecognized char -> ASCII code: %d\n"cerrar, yytext[0]);}
 
 %%
 

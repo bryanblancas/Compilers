@@ -153,7 +153,10 @@ void updateVarInt(TABLA_SIMBOLOS *ts, int a, char* name){
 	NODO *actual;
 	for(actual = ts -> inicio; actual != NULL ; actual = actual -> siguiente)
 		if(mystrcmp(actual -> name, name)){
-			actual -> tipo1 = a;
+			if(actual -> type == 1)
+				actual -> tipo1 = a;
+			else if(actual -> type == 2)
+				actual -> tipo2 = a;
 			break;
 		}
 }
@@ -162,7 +165,10 @@ void updateVarFloat(TABLA_SIMBOLOS *ts, float a, char* name){
 	NODO *actual;
 	for(actual = ts -> inicio; actual != NULL ; actual = actual -> siguiente)
 		if(mystrcmp(actual -> name, name)){
-			actual -> tipo2 = a;
+			if(actual -> type == 1)
+				actual -> tipo1 = a;
+			else if(actual -> type == 2)
+				actual -> tipo2 = a;
 			break;
 		}
 }
@@ -286,10 +292,44 @@ void * getVar(TABLA_SIMBOLOS *ts, char *name){
 	return rtn;
 }
 
+void * getVarWithoutName(void* a){
+	NODO *actual = (NODO *) a;
+	return actual;
+}
+
 void verTabla(TABLA_SIMBOLOS *ts){
 	NODO *actual;
 	for(actual = ts -> inicio; actual != NULL ; actual = actual -> siguiente)
 			printf("%5d %5d %3.3f %10s %10s\n", actual -> type, actual -> tipo1, actual -> tipo2, actual -> tipo3, actual -> name);
+}
+
+void copiarNodo(TABLA_SIMBOLOS *ts, char *name, void* a){
+	if(a == NULL){ printf(amarillo"Variable not declarated\n"cerrar);return;}
+	NODO *na = (NODO *) a;
+	NODO *udt_nodo = (NODO *) getVar(ts, name); 
+	int nat = na->type, nt = udt_nodo -> type; 
+	if((nat==1 && nat==1) || (nat==1 && nat==2) || (nat==2 && nat==1) || (nat==2 && nat==2)){
+		if(udt_nodo->type == 1){
+			if(na->type == 1)
+				udt_nodo -> tipo1 = na -> tipo1;
+			else
+				udt_nodo -> tipo1 = (int) na -> tipo2;
+		}
+		else if(udt_nodo->type == 2){
+			if(na->type == 1)
+				udt_nodo -> tipo2 =(float) na -> tipo1;
+			else
+				udt_nodo -> tipo2 = na -> tipo2;
+		}
+	}
+	else if(nat==3 && nat==3){
+		udt_nodo->tipo3 = (char *) malloc(sizeof(char)*tam(na->tipo3)+1);
+		mystrcpy2(udt_nodo->tipo3, na->tipo3, 0, tam(na->tipo3));
+	}
+	else{
+		printf(amarillo"Incompatible operands\n"cerrar);
+	}
+
 }
 
 /**
@@ -300,8 +340,28 @@ void verTabla(TABLA_SIMBOLOS *ts){
 **
 **/
 
+void* menosVariable(TABLA_SIMBOLOS *ts,char* name){
+	NODO *na = (NODO *) getVar(ts, name); 
+	NODO* result = (NODO*) malloc(sizeof(NODO));
+
+	if(na -> type == 1){
+		result -> type = MYINT;
+		result -> tipo1 = -1 * na->tipo1;
+		return (void*) result;
+	}
+	else if(na -> type == 2){
+		result -> type = MYFLOAT;
+		result -> tipo2 = -1.0 * na->tipo2;
+		return (void*) result;
+	}
+	else{
+		printf(amarillo"Incompatible operands\n"cerrar);
+		return NULL;
+	}
+}
+
 void* variableMasVariable(void* a, void* b){
-	if(a == NULL || b == NULL){ printf("Variable not declarated\n"); return NULL;  }
+	if(a == NULL || b == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* nb = (NODO *) b;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
@@ -337,13 +397,13 @@ void* variableMasVariable(void* a, void* b){
 		return (void*) result;
 	}
 	else{
-		printf("Incompatible operands\n");
+		printf(amarillo"Incompatible operands\n"cerrar);
 		return NULL;
 	}
 }
 
 void* variableMenosVariable(void* a, void* b){
-	if(a == NULL || b == NULL){ printf("Variable not declarated\n"); return NULL;  }
+	if(a == NULL || b == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* nb = (NODO *) b;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
@@ -379,13 +439,13 @@ void* variableMenosVariable(void* a, void* b){
 		return (void*) result;
 	}
 	else{
-		printf("Incompatible operands\n");
+		printf(amarillo"Incompatible operands\n"cerrar);
 		return NULL;
 	}
 }
 
 void* variablePorVariable(void* a, void* b){
-	if(a == NULL || b == NULL){ printf("Variable not declarated\n"); return NULL;  }
+	if(a == NULL || b == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* nb = (NODO *) b;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
@@ -415,13 +475,13 @@ void* variablePorVariable(void* a, void* b){
 		return (void*) result;
 	}
 	else{
-		printf("Incompatible operands\n");
+		printf(amarillo"Incompatible operands\n"cerrar);
 		return NULL;
 	}
 }
 
 void* variableDivVariable(void* a, void* b){
-	if(a == NULL || b == NULL){ printf("Variable not declarated\n"); return NULL;  }
+	if(a == NULL || b == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* nb = (NODO *) b;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
@@ -451,13 +511,13 @@ void* variableDivVariable(void* a, void* b){
 		return (void*) result;
 	}
 	else{
-		printf("Incompatible operands\n");
+		printf(amarillo"Incompatible operands\n"cerrar);
 		return NULL;
 	}
 }
 
 void* variablePowVariable(void* a, void* b){
-	if(a == NULL || b == NULL){ printf("Variable not declarated\n"); return NULL;  }
+	if(a == NULL || b == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* nb = (NODO *) b;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
@@ -481,13 +541,13 @@ void* variablePowVariable(void* a, void* b){
 		return (void*) result;
 	}
 	else{
-		printf("Incompatible operands\n");
+		printf(amarillo"Incompatible operands\n"cerrar);
 		return NULL;
 	}
 }
 
 void* variableMasEntero(void* a, int b){
-	if(a == NULL){ printf("Variable not declarated\n"); return NULL;  }
+	if(a == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
 
@@ -504,13 +564,13 @@ void* variableMasEntero(void* a, int b){
 		return (void*) result;
 	}
 	else{
-		printf("Incompatible operands\n");
+		printf(amarillo"Incompatible operands\n"cerrar);
 		return NULL;
 	}
 }
 
 void* variableMasFloat(void* a,float b){
-	if(a == NULL){ printf("Variable not declarated\n"); return NULL;  }
+	if(a == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
 
@@ -527,87 +587,303 @@ void* variableMasFloat(void* a,float b){
 		return (void*) result;
 	}
 	else{
-		printf("Incompatible operands\n");
+		printf(amarillo"Incompatible operands\n"cerrar);
 		return NULL;
 	}
 }
 
-void* variableMasStr(void* a, char* b){
-	if(a == NULL){ printf("Variable not declarated\n"); return NULL;  }
+void* variableMasStr(void* a, char* b, int s){
+	if(a == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
 
 	if(na -> type == 3){
 		result -> type = MYSTRING;
-		result -> tipo3 = (char *) malloc(sizeof(char) * tam(b) + 1);
-        mystrcat(result -> tipo3, na->tipo3, b);
+		if(s == 1){
+			result -> tipo3 = (char *) malloc(sizeof(char) * tam(b) + 1);
+	        mystrcat(result -> tipo3, na->tipo3, b);
+	    }
+	    else{
+	    	result -> tipo3 = (char *) malloc(sizeof(char) * tam(na->tipo3) + 1);
+	        mystrcat(result -> tipo3, b, na->tipo3);
+	    }
 		return (void*) result;
 	}
 	else{
-		printf("Operation not support\n");
+		printf(amarillo"Operation not support\n"cerrar);
 		return NULL;
 	}
 }
 
-void* variableMenosEntero(void* a, int b){
-	if(a == NULL){ printf("Variable not declarated\n"); return NULL;  }
+void* variableMenosEntero(void* a, int b, int s){
+	if(a == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
 
 	if(na -> type == 1){
 		result -> type = MYINT;
-		int a = (na->tipo1) - b;
+		int a;
+		if(s)
+			a = (na->tipo1) - b;
+		else
+			a = b - (na->tipo1);
 		result -> tipo1 = a;
 		return (void*) result;
 	}
 	else if(na -> type == 2){
 		result -> type = MYFLOAT;
-		float a = (na->tipo2) - b;
+		float a;
+		if(s)
+			a = (na->tipo2) - b;
+		else
+			a = b - (na->tipo2);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
 	else{
-		printf("Incompatible operands\n");
+		printf(amarillo"Incompatible operands\n"cerrar);
 		return NULL;
 	}
 }
 
-void* variableMenosFloat(void* a,float b){
-	if(a == NULL){ printf("Variable not declarated\n"); return NULL;  }
+void* variableMenosFloat(void* a,float b, int s){
+	if(a == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
 
 	if(na -> type == 1){
 		result -> type = MYFLOAT;
-		float a = (na->tipo1) - b;
-		result -> tipo2 = a;
+		float a;
+		if(s)
+			a = (na->tipo1) - b;
+		else
+			a = b - (na->tipo1);
+		result -> tipo2 = a;	
 		return (void*) result;
 	}
 	else if(na -> type == 2){
 		result -> type = MYFLOAT;
-		float a = (na->tipo2) - b;
+		float a;
+		if(s)
+			a = (na->tipo2) - b;
+		else
+			a = b - (na->tipo2);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
 	else{
-		printf("Incompatible operands\n");
+		printf(amarillo"Incompatible operands\n"cerrar);
 		return NULL;
 	}
 }
 
-void* variableMenosStr(void* a, char* b){
-	if(a == NULL){ printf("Variable not declarated\n"); return NULL;  }
+void* variableMenosStr(void* a, char* b, int s){
+	if(a == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
 
 	if(na -> type == 3){
 		result -> type = MYSTRING;
-		result -> tipo3 = (char *) malloc(sizeof(char) * tam(na->tipo3) + 1);
-        mystrrest(result -> tipo3, na->tipo3, b);
+		if(s == 1){
+			result -> tipo3 = (char *) malloc(sizeof(char) * tam(na->tipo3) + 1);
+	        mystrrest(result -> tipo3, na->tipo3, b);
+	    }
+	    else{
+	    	result -> tipo3 = (char *) malloc(sizeof(char) * tam(b) + 1);
+	        mystrrest(result -> tipo3, b, na->tipo3);
+	    }
 		return (void*) result;
 	}
 	else{
-		printf("Operation not support\n");
+		printf(amarillo"Operation not support\n"cerrar);
+		return NULL;
+	}
+}
+
+void* variablePorEntero(void* a, int b){
+	if(a == NULL){ return NULL;  }
+	NODO* na = (NODO *) a;
+	NODO* result = (NODO*) malloc(sizeof(NODO));
+
+	if(na -> type == 1){
+		result -> type = MYINT;
+		int a = (na->tipo1) * b;
+		result -> tipo1 = a;
+		return (void*) result;
+	}
+	else if(na -> type == 2){
+		result -> type = MYFLOAT;
+		float a = (na->tipo2) * b;
+		result -> tipo2 = a;
+		return (void*) result;
+	}
+	else{
+		printf(amarillo"Incompatible operands\n"cerrar);
+		return NULL;
+	}
+}	
+
+void* variablePorFloat(void* a, float b){
+	if(a == NULL){ return NULL;  }
+	NODO* na = (NODO *) a;
+	NODO* result = (NODO*) malloc(sizeof(NODO));
+
+	if(na -> type == 1){
+		result -> type = MYFLOAT;
+		float a = (float) (na->tipo1) * b;
+		result -> tipo2 = a;
+		return (void*) result;
+	}
+	else if(na -> type == 2){
+		result -> type = MYFLOAT;
+		float a = (na->tipo2) * b;
+		result -> tipo2 = a;
+		return (void*) result;
+	}
+	else{
+		printf(amarillo"Incompatible operands\n"cerrar);
+		return NULL;
+	}
+}
+
+void* variableDivEntero(void* a, int b, int s){
+	if(a == NULL){ return NULL;  }
+	NODO* na = (NODO *) a;
+	NODO* result = (NODO*) malloc(sizeof(NODO));
+
+	if(na -> type == 1){
+		result -> type = MYINT;
+		int a;
+		if(s)
+			a =  (na->tipo1) / b;
+		else
+			a =  b / (na->tipo1);
+		result -> tipo1 = a;
+		return (void*) result;
+	}
+	else if(na -> type == 2){
+		result -> type = MYFLOAT;
+		float a;
+		if(s)
+			a = (na->tipo2) / b;
+		else
+			a = b / (na->tipo2);
+		result -> tipo2 = a;
+		return (void*) result;
+	}
+	else{
+		printf(amarillo"Incompatible operands\n"cerrar);
+		return NULL;
+	}	
+}
+
+void* variableDivFloat(void* a, float b, int s){
+	if(a == NULL){ return NULL;  }
+	NODO* na = (NODO *) a;
+	NODO* result = (NODO*) malloc(sizeof(NODO));
+
+	if(na -> type == 1){
+		result -> type = MYFLOAT;
+		float a;
+		if(s)
+			a = (float) (na->tipo1) / b;
+		else
+			a = (float) b / (na->tipo1);
+		result -> tipo2 = a;	
+		return (void*) result;
+	}
+	else if(na -> type == 2){
+		result -> type = MYFLOAT;
+		float a;
+		if(s)
+			a = (na->tipo2) / b;
+		else
+			a = b / (na->tipo2);
+		result -> tipo2 = a;	
+		return (void*) result;
+	}
+	else{
+		printf(amarillo"Incompatible operands\n"cerrar);
+		return NULL;
+	}
+}
+
+void* variablePowEntero(void* a, int b, int s){
+	if(a == NULL){ return NULL;  }
+	NODO* na = (NODO *) a;
+	NODO* result = (NODO*) malloc(sizeof(NODO));
+
+	if(na -> type == 1){
+		result -> type = MYINT;
+		int a;
+		if(s)
+			a = pow_num(na->tipo1, b);
+		else
+			a = pow_num(b, na->tipo1);
+		result -> tipo1 = a;
+		return (void*) result;
+	}
+	else if(na -> type == 2){
+		result -> type = MYFLOAT;
+		float a;
+		if(s)
+			a = pow_num(na->tipo2, b);
+		else{
+			printf(amarillo"Incompatible operands, pow(element, int)\n"cerrar);
+			return NULL;	
+		}
+
+		result -> tipo2 = a;
+		return (void*) result;
+	}
+	else if(na -> type == 3){
+		result -> type = MYSTRING;
+		if(s){
+			result -> tipo3 = (char *) malloc(sizeof(char) * tam(na->tipo3) + 1);
+	        pow_cad(result -> tipo3, na->tipo3, b);
+	    }
+	    else{
+	    	printf(amarillo"Incompatible operands\n"cerrar);
+			return NULL;	
+	    } 
+	    return (void*) result;
+	}
+	else{
+		printf(amarillo"Incompatible operands\n"cerrar);
+		return NULL;
+	}
+}
+
+void* variablePowFloat(void* a, float b){
+	if(a == NULL){ return NULL;  }
+	NODO* na = (NODO *) a;
+	NODO* result = (NODO*) malloc(sizeof(NODO));
+
+	if(na -> type == 1){
+		result -> type = MYINT;
+		int a = pow_num(b, na->tipo1);
+		result -> tipo1 = a;
+		return (void*) result;
+	}
+	else{
+		printf(amarillo"Incompatible operands, pow(element, int)\n"cerrar);
+		return NULL;
+	}
+}
+
+void* strPowVariable(void* a, char *b){
+	if(a == NULL){ return NULL;  }
+	NODO* na = (NODO *) a;
+	NODO* result = (NODO*) malloc(sizeof(NODO));
+
+	if(na -> type == 1){
+		result -> type = MYSTRING;
+		result->tipo3 = (char*) malloc(sizeof(char)*(tam(b)+1)*val_abs(na->tipo1));
+		pow_cad(result->tipo3, b, na->tipo1);
+		return (void*) result;
+	}
+	else{
+		printf(amarillo"Incompatible operands, pow(element, int)\n"cerrar);
 		return NULL;
 	}
 }

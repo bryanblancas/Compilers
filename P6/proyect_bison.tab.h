@@ -71,7 +71,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 18 "proyect_bison.y" /* yacc.c:1909  */
+#line 19 "proyect_bison.y" /* yacc.c:1909  */
 
   int entero;
   float decimal;

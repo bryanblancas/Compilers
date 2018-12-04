@@ -471,11 +471,12 @@ char *yytext;
 #include <stdio.h>
 #include <stdlib.h>
 #include "proyect_bison.tab.h"
+#include "func.h"
 
 void mystrcpy(char* a);
 void mystrcpyvar(char* a);
-#line 478 "lex.yy.c"
 #line 479 "lex.yy.c"
+#line 480 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -692,10 +693,10 @@ YY_DECL
 		}
 
 	{
-#line 15 "proyect_flex.l"
+#line 16 "proyect_flex.l"
 
 
-#line 699 "lex.yy.c"
+#line 700 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -754,39 +755,39 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 17 "proyect_flex.l"
+#line 18 "proyect_flex.l"
 { 	yylval.entero = atoi(yytext); 
 				return (ENTERO);} 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 20 "proyect_flex.l"
+#line 21 "proyect_flex.l"
 { 	yylval.decimal = atof(yytext); 
 				return (DECIMAL);}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 23 "proyect_flex.l"
+#line 24 "proyect_flex.l"
 {	return (TIPO1);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 24 "proyect_flex.l"
+#line 25 "proyect_flex.l"
 {	return (TIPO2);}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 25 "proyect_flex.l"
+#line 26 "proyect_flex.l"
 {	return (TIPO3);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 26 "proyect_flex.l"
+#line 27 "proyect_flex.l"
 {	return (POW);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 28 "proyect_flex.l"
+#line 29 "proyect_flex.l"
 {
 							char *cad = (char*) malloc(sizeof(char) * (yyleng));
 							mystrcpyvar(cad);
@@ -797,7 +798,7 @@ YY_RULE_SETUP
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 35 "proyect_flex.l"
+#line 36 "proyect_flex.l"
 {	char *cad = (char*) malloc(sizeof(char) * (yyleng-1));
 				mystrcpy(cad);
 				yylval.string = cad;
@@ -806,71 +807,71 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 41 "proyect_flex.l"
+#line 42 "proyect_flex.l"
 {	return (COMA);}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 42 "proyect_flex.l"
+#line 43 "proyect_flex.l"
 {	return (IGUAL);}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 43 "proyect_flex.l"
+#line 44 "proyect_flex.l"
 {	return (MAS);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 44 "proyect_flex.l"
+#line 45 "proyect_flex.l"
 {	return (MENOS);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 45 "proyect_flex.l"
+#line 46 "proyect_flex.l"
 {	return (POR);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 46 "proyect_flex.l"
+#line 47 "proyect_flex.l"
 {	return (DIV);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 47 "proyect_flex.l"
+#line 48 "proyect_flex.l"
 {	return (PTOCOMA);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 48 "proyect_flex.l"
+#line 49 "proyect_flex.l"
 {	return (PARABRE);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 49 "proyect_flex.l"
+#line 50 "proyect_flex.l"
 {	return (PARCIERRA);}
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 50 "proyect_flex.l"
+#line 51 "proyect_flex.l"
 {	return (SALTOLINE);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 52 "proyect_flex.l"
+#line 53 "proyect_flex.l"
 {}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 53 "proyect_flex.l"
-{printf("ASCII CODE: %d\n", yytext[0]);}
+#line 54 "proyect_flex.l"
+{printf(rojo"Unrecognized char -> ASCII code: %d\n"cerrar, yytext[0]);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 55 "proyect_flex.l"
+#line 56 "proyect_flex.l"
 ECHO;
 	YY_BREAK
-#line 874 "lex.yy.c"
+#line 875 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1875,7 +1876,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 55 "proyect_flex.l"
+#line 56 "proyect_flex.l"
 
 
 void mystrcpy(char* a){

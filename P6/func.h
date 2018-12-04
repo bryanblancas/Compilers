@@ -3,6 +3,10 @@
 #define MYINT 1
 #define MYFLOAT 2
 #define MYSTRING 3
+#define azul "\x1B[36m"
+#define rojo "\033[0;31m"
+#define amarillo "\x1B[33m"
+#define cerrar "\x1B[00m"
 
 typedef struct nodo{
 	int type;
@@ -39,6 +43,7 @@ int val_abs(int a);
 float pow_num(float a, int b);
 
 
+
 //FUNCIONES DE TABLA DE SIMBOLOS
 //Inicializa la tabla de simbolos 
 void init_tabla(TABLA_SIMBOLOS *ts);
@@ -72,11 +77,16 @@ char* getStringValue(TABLA_SIMBOLOS *ts, char *name);
 int mystrcmp(char *a, char *b);
 //Retorna el valor de una variable 
 void * getVar(TABLA_SIMBOLOS *ts, char *name);
+//Retorna el mismo nodo
+void * getVarWithoutName(void* a);
 //Ver la tabla de símbolos
 void verTabla(TABLA_SIMBOLOS *ts);
+//Copia el contenido del nodo a a el nodo con el nombre name
+void copiarNodo(TABLA_SIMBOLOS *ts, char *name, void* a);
 
 //OPERACIONES DE VARIABLES
 //Retorna un nuevo nodo con el resultado de la operación
+void* menosVariable(TABLA_SIMBOLOS *ts, char* a);
 void* variableMasVariable(void* a, void* b);
 void* variableMenosVariable(void* a, void* b);
 void* variablePorVariable(void* a, void* b);
@@ -85,10 +95,20 @@ void* variablePowVariable(void* a, void* b);
 
 void* variableMasEntero(void* a, int b);
 void* variableMasFloat(void* a,float b);
-void* variableMasStr(void* a, char* b);
+void* variableMasStr(void* a, char* b, int s);
 
-void* variableMenosEntero(void* a, int b);
-void* variableMenosFloat(void* a,float b);
-void* variableMenosStr(void* a, char* b);
+void* variableMenosEntero(void* a, int b, int s);
+void* variableMenosFloat(void* a,float b, int s);
+void* variableMenosStr(void* a, char* b, int s);
+
+void* variablePorEntero(void* a, int b);
+void* variablePorFloat(void* a, float b);
+
+void* variableDivEntero(void* a, int b, int s);
+void* variableDivFloat(void* a, float b, int s);
+
+void* variablePowEntero(void* a, int b, int s);
+void* variablePowFloat(void* a, float b);
+void* strPowVariable(void* a, char *b);
 
 #endif

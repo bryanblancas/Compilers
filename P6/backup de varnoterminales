@@ -1,0 +1,38 @@
+input:    /*CADENA VACÍA*/
+  |       input calc
+  |       input cadena  PTOCOMA SALTOLINE       { printf(azul"%s\n"cerrar, $1); free($1);}
+  |       input cad_pow_final
+  |       input declaracion_variables
+  |       input asignar_variables
+  |       input exp_variable PTOCOMA SALTOLINE  {
+                                                  if($2 != NULL){
+                                                    NODO* na = (NODO *) $2;
+                                                    if(na->type == 1)
+                                                      printf(azul"%d\n"cerrar, na->tipo1);
+                                                    else if(na->type == 2)
+                                                      printf(azul"%f\n"cerrar, na->tipo2);
+                                                    else if(na->type == 3)
+                                                      printf(azul"%s\n"cerrar, na->tipo3);
+                                                  }
+                                                }
+  |       input errores 
+  |       PTOCOMA SALTOLINE                     { printf(amarillo"Expected arguments\n"cerrar);}
+  |       SALTOLINE                             { printf(amarillo"Expected arguments\n"cerrar);}
+;
+
+/*
+//VarNoTerminal de potencia de cadenas, para ver cuando termina he imprimirla
+cad_pow_final:    cadena_pow PTOCOMA SALTOLINE    { printf(azul"%s\n"cerrar, $1); free($1); }
+      |           cadena_pow SALTOLINE            { printf(amarillo"Expected ;\n"cerrar);}
+;
+//VarNoTerminal de la operación con str, para ver cuando acaba e imprimirla
+cadena:   str PTOCOMA SALTOLINE   { printf(azul"%s\n"cerrar, $1); free($1);}
+  |       str SALTOLINE           { printf(amarillo"Expected ;\n"cerrar);}
+;
+//VarNoTerminal de las operaciones aritméticas, para ver cuando acaba e imprimirla
+*/
+calc  :   exp_entera PTOCOMA SALTOLINE  { printf(azul">> %d\n"cerrar, $1); }
+  |       exp_decimal PTOCOMA SALTOLINE { printf(azul">> %f\n"cerrar, $1);  } 
+  //|       exp_entera SALTOLINE          { printf(amarillo"Expected ;\n"cerrar);}                            
+  //|       exp_decimal SALTOLINE         { printf(amarillo"Expected ;\n"cerrar);}
+;
