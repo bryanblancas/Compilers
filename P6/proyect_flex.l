@@ -22,7 +22,7 @@ STRING \"[^\"]+\"
 				return (DECIMAL);}
 
 int 		{	return (TIPO1);}
-float 		{	return (TIPO2);}
+double 		{	return (TIPO2);}
 string 		{	return (TIPO3);}
 pow			{	return (POW);}
 
@@ -45,6 +45,7 @@ pow			{	return (POW);}
 "-"         {	return (MENOS);}
 "*"         {	return (POR);}
 "/"         {	return (DIV);}
+"%"			{	return (MODU);}
 ";"         {	return (PTOCOMA);}
 "("			{	return (PARABRE);}
 ")"			{	return (PARCIERRA);}

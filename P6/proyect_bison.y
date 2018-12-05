@@ -18,7 +18,7 @@
 //DEFINICIÓN DE TIPOS DE DATOS
 %union{
   int entero;
-  float decimal;
+  double decimal;
   char* string;
   void* var
 }
@@ -38,12 +38,13 @@
 %token DIV
 %token PTOCOMA
 %token POW
+%token MODU
 %token PARABRE
 %token PARCIERRA
 %token IGUAL
 %token COMA
 %token SALTOLINE
-//1:int  2:float  3:string
+//1:int  2:double  3:string
 %token TIPO1
 %token TIPO2
 %token TIPO3
@@ -62,7 +63,7 @@
 
 //PRECEDENCIA
 %left MAS MENOS
-%left POR DIV
+%left POR DIV MODU
 %left POW  
 %left PARABRE PARCIERRA
 
@@ -92,21 +93,10 @@ input:    /*CADENA VACÍA*/
   |       SALTOLINE                             { printf(amarillo"Expected arguments\n"cerrar);}
 ;
 
-/*
-//VarNoTerminal de potencia de cadenas, para ver cuando termina he imprimirla
-cad_pow_final:    cadena_pow PTOCOMA SALTOLINE    { printf(azul"%s\n"cerrar, $1); free($1); }
-      |           cadena_pow SALTOLINE            { printf(amarillo"Expected ;\n"cerrar);}
-;
-//VarNoTerminal de la operación con str, para ver cuando acaba e imprimirla
-cadena:   str PTOCOMA SALTOLINE   { printf(azul"%s\n"cerrar, $1); free($1);}
-  |       str SALTOLINE           { printf(amarillo"Expected ;\n"cerrar);}
-;
-*/
 //VarNoTerminal de las operaciones aritméticas, para ver cuando acaba e imprimirla
 calc  :   exp_entera PTOCOMA SALTOLINE  { printf(azul">> %d\n"cerrar, $1); }
   |       exp_decimal PTOCOMA SALTOLINE { printf(azul">> %f\n"cerrar, $1);  } 
 ;
-
 
 /**
 **
@@ -130,12 +120,10 @@ errores:      TIPO1 VARIABLE SALTOLINE    { printf(amarillo"Expected ;\n"cerrar)
     |         TIPO3 VARIABLE IGUAL exp_entera SALTOLINE   { printf(amarillo"Expects ;\n"cerrar);}
     |         TIPO3 VARIABLE IGUAL exp_decimal SALTOLINE   { printf(amarillo"Expects ;\n"cerrar);}
     //DECLARACIONES INCOMPATIBLES
-    //|         TIPO1 VARIABLE IGUAL exp_decimal PTOCOMA SALTOLINE   { printf(amarillo"Incompatible declaration, expects int\n"cerrar);}
     |         TIPO1 VARIABLE IGUAL str PTOCOMA SALTOLINE   { printf(amarillo"Incompatible declaration, expects int\n"cerrar);}
     |         TIPO1 VARIABLE IGUAL cadena_pow PTOCOMA SALTOLINE   { printf(amarillo"Incompatible declaration, expects int\n"cerrar);}
-    //|         TIPO2 VARIABLE IGUAL exp_entera PTOCOMA SALTOLINE   { printf(amarillo"Incompatible declaration, expects float\n"cerrar);}
-    |         TIPO2 VARIABLE IGUAL str PTOCOMA SALTOLINE   { printf(amarillo"Incompatible declaration, expects float\n"cerrar);}
-    |         TIPO2 VARIABLE IGUAL cadena_pow PTOCOMA SALTOLINE   { printf(amarillo"Incompatible declaration, expects float\n"cerrar);}
+    |         TIPO2 VARIABLE IGUAL str PTOCOMA SALTOLINE   { printf(amarillo"Incompatible declaration, expects double\n"cerrar);}
+    |         TIPO2 VARIABLE IGUAL cadena_pow PTOCOMA SALTOLINE   { printf(amarillo"Incompatible declaration, expects double\n"cerrar);}
     |         TIPO3 VARIABLE IGUAL exp_entera PTOCOMA SALTOLINE   { printf(amarillo"Incompatible declaration, expects string\n"cerrar);}
     |         TIPO3 VARIABLE IGUAL exp_decimal PTOCOMA SALTOLINE   { printf(amarillo"Incompatible declaration, expects string\n"cerrar);}
     //Otros errores
@@ -157,6 +145,7 @@ errores:      TIPO1 VARIABLE SALTOLINE    { printf(amarillo"Expected ;\n"cerrar)
     |         str DIV exp_variable            { printf(amarillo"Operation not supported\n"cerrar);}
     |         exp_variable DIV cadena_pow     { printf(amarillo"Operation not supported\n"cerrar);}
     |         cadena_pow DIV exp_variable     { printf(amarillo"Operation not supported\n"cerrar);}
+    //|         exp_variable MODU exp_decimal   { printf(amarillo"Operation not supported\n"cerrar);}
     |         POW PARABRE exp_variable COMA exp_decimal PARCIERRA     { printf(amarillo"Invalid arguments, use pow(element, int); \n"cerrar);}
     |         POW PARABRE exp_variable COMA cadena_pow PARCIERRA      { printf(amarillo"Invalid arguments, use pow(element, int); \n"cerrar);}
     |         POW PARABRE exp_variable COMA str PARCIERRA             { printf(amarillo"Invalid arguments, use pow(element, int); \n"cerrar);}
@@ -177,8 +166,8 @@ errores:      TIPO1 VARIABLE SALTOLINE    { printf(amarillo"Expected ;\n"cerrar)
 /**
 **
 **  Sección de declaración de variables
-**  int|float|string var;
-**  int|float|string var = int|float|string|var;
+**  int|double|string var;
+**  int|double|string var = int|double|string|var;
 **
 **/
 
@@ -254,7 +243,7 @@ declaracion_variables:
                                                                         printf(amarillo"Variable << %s >> already exists\n"cerrar,$2);
                                                                       }
                                                                       else{
-                                                                        NODO a = crearNodoFloat((float) $4, $2);
+                                                                        NODO a = crearNodoFloat((double) $4, $2);
                                                                         insertarNodo(ts, a);
                                                                       }
                                                                       //verTabla(ts);
@@ -317,7 +306,7 @@ declaracion_variables:
 /**
 **
 **  Sección de asignación de variables 
-**  var = int|float|string|var
+**  var = int|double|string|var
 **
 **/
 
@@ -341,7 +330,7 @@ asignar_variables:
                                                                 if(getType(ts, $1) != 2 && getType(ts, $1) != 1)
                                                                   printf(amarillo"Incompatible declaration\n"cerrar);
                                                                 else
-                                                                  updateVarFloat(ts,(float) $3, $1);
+                                                                  updateVarFloat(ts,(double) $3, $1);
                                                               }
                                                               //verTabla(ts);
                                                               free($1);
@@ -382,8 +371,8 @@ asignar_variables:
 /**
 **
 **  Sección de operaciones entre variables
-**  var  -var   var +-/*pow() var   var /*-+ int|float|string
-**  int|float|string /*-+ var
+**  var  -var   var +-/%*pow() var   var /*%-+ int|double|string
+**  int|double|string /*%-+ var
 **
 **/
 
@@ -402,11 +391,23 @@ exp_variable:   VARIABLE          {
                                       $$ = menosVariable(ts, $2);
                                     free($2);
                                   }
+      |         MENOS PARABRE exp_variable PARCIERRA{
+                                                      //AQUÍ SE MUERE SI HACES operaciones entre string y int|double
+                                                      $$ = getVar(ts, $3);
+                                                      if($$ == NULL){
+                                                        $$ = menosExpVariable($3);
+                                                      }
+                                                      else{
+                                                        $$ = menosVariable(ts, $3);
+                                                      }
+                                  }
       |         exp_variable MAS exp_variable   { $$ = variableMasVariable($1, $3);}
       |         exp_variable MENOS exp_variable { $$ = variableMenosVariable($1, $3);} 
       |         exp_variable POR exp_variable   { $$ = variablePorVariable($1, $3);}  
       |         exp_variable DIV exp_variable   { $$ = variableDivVariable($1, $3);}
       |         POW PARABRE exp_variable COMA exp_variable PARCIERRA  { $$ = variablePowVariable($3, $5);}
+      //agregar combinaciones de modu y tipo de dato
+      |         exp_variable MODU exp_variable   { $$ = variableModVariable($1,$3);}
       |         PARABRE exp_variable PARCIERRA  { $$ = getVarWithoutName($2);}
 
 
@@ -440,6 +441,9 @@ exp_variable:   VARIABLE          {
       |         exp_variable DIV exp_decimal      { $$ = variableDivFloat($1, $3, 1);}
       |         exp_entera DIV exp_variable       { $$ = variableDivEntero($3, $1, 0);}
       |         exp_decimal DIV exp_variable      { $$ = variableDivFloat($3, $1, 0);}
+
+      |         exp_variable MODU exp_entera      { $$ = variableModuEntero($1,$3,0);}
+      |         exp_entera MODU exp_variable      { $$ = variableModuEntero($3,$1,0);}
 
       //AGREGAR A ERRORES OPERACIONES NO COMPATIBLES
       |         POW PARABRE exp_variable COMA exp_entera PARCIERRA    { $$ = variablePowEntero($3, $5, 1);}
@@ -508,7 +512,7 @@ str :  STRING       { $$ = $1; }
 /**
 **
 **  Sección de operaciones aritméticas
-**  int +/*- int    float +*-/ float  pow(int|float , int)  
+**  int +/*- int    double +*-/ double  pow(int|double , int)  
 **
 **/
 
@@ -518,6 +522,7 @@ exp_entera :       ENTERO                {$$ = $1;}
     |       exp_entera MENOS exp_entera  {$$ = $1 - $3;}
     |       exp_entera POR exp_entera    {$$ = $1 * $3;}
     |       exp_entera DIV exp_entera    {$$ = $1 / $3;}
+    |       exp_entera MODU exp_entera   {$$ = $1 % $3;}
     |       PARABRE exp_entera PARCIERRA {$$ = $2;}
     |       POW PARABRE exp_entera COMA exp_entera PARCIERRA   {$$ = (int) pow_num($3, $5);}
 ;
@@ -528,14 +533,15 @@ exp_decimal :       DECIMAL                {$$ = $1;}
     |       exp_decimal MENOS exp_decimal  {$$ = $1 - $3;}
     |       exp_decimal POR exp_decimal    {$$ = $1 * $3;}
     |       exp_decimal DIV exp_decimal    {$$ = $1 / $3;}
-    |       exp_entera MAS exp_decimal    {$$ =(float) $1 + $3;}
-    |       exp_entera MENOS exp_decimal  {$$ =(float) $1 - $3;}
-    |       exp_entera POR exp_decimal    {$$ =(float) $1 * $3;}
-    |       exp_entera DIV exp_decimal    {$$ =(float) $1 / $3;}
-    |       exp_decimal MAS exp_entera    {$$ = $1 + (float) $3;}
-    |       exp_decimal MENOS exp_entera  {$$ = $1 - (float) $3;}
-    |       exp_decimal POR exp_entera    {$$ = $1 * (float) $3;}
-    |       exp_decimal DIV exp_entera    {$$ = $1 / (float) $3;}
+    //|       exp_decimal MODU exp_decimal   {$$ = (double) $1 % $3;}
+    |       exp_entera MAS exp_decimal    {$$ =(double) $1 + $3;}
+    |       exp_entera MENOS exp_decimal  {$$ =(double) $1 - $3;}
+    |       exp_entera POR exp_decimal    {$$ =(double) $1 * $3;}
+    |       exp_entera DIV exp_decimal    {$$ =(double) $1 / $3;}
+    |       exp_decimal MAS exp_entera    {$$ = $1 + (double) $3;}
+    |       exp_decimal MENOS exp_entera  {$$ = $1 - (double) $3;}
+    |       exp_decimal POR exp_entera    {$$ = $1 * (double) $3;}
+    |       exp_decimal DIV exp_entera    {$$ = $1 / (double) $3;}
     |       PARABRE exp_decimal PARCIERRA {$$ = $2;}
     |       POW PARABRE exp_decimal COMA exp_entera PARCIERRA   {$$ = pow_num($3, $5);}
 ;

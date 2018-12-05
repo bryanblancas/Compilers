@@ -55,14 +55,15 @@ extern int yydebug;
     DIV = 265,
     PTOCOMA = 266,
     POW = 267,
-    PARABRE = 268,
-    PARCIERRA = 269,
-    IGUAL = 270,
-    COMA = 271,
-    SALTOLINE = 272,
-    TIPO1 = 273,
-    TIPO2 = 274,
-    TIPO3 = 275
+    MODU = 268,
+    PARABRE = 269,
+    PARCIERRA = 270,
+    IGUAL = 271,
+    COMA = 272,
+    SALTOLINE = 273,
+    TIPO1 = 274,
+    TIPO2 = 275,
+    TIPO3 = 276
   };
 #endif
 
@@ -74,11 +75,11 @@ union YYSTYPE
 #line 19 "proyect_bison.y" /* yacc.c:1909  */
 
   int entero;
-  float decimal;
+  double decimal;
   char* string;
   void* var
 
-#line 82 "proyect_bison.tab.h" /* yacc.c:1909  */
+#line 83 "proyect_bison.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

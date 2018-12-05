@@ -101,8 +101,8 @@ void mystrrest(char *a, char *b, char *c){
 }
 
 
-float pow_num(float a, int b){
-	float rtn = 1, flag = 0;
+double pow_num(double a, int b){
+	double rtn = 1, flag = 0;
 	
 	if(b < 0) b = val_abs(b);
 	else flag = 1;
@@ -123,7 +123,7 @@ int getIntValue(TABLA_SIMBOLOS *ts, char *name){
 		}
 	return 0;
 }
-float getFloatValue(TABLA_SIMBOLOS *ts, char *name){
+double getFloatValue(TABLA_SIMBOLOS *ts, char *name){
 	NODO *actual;
 	for(actual = ts -> inicio; actual != NULL ; actual = actual -> siguiente)
 		if(mystrcmp(actual -> name, name)){
@@ -161,7 +161,7 @@ void updateVarInt(TABLA_SIMBOLOS *ts, int a, char* name){
 		}
 }
 
-void updateVarFloat(TABLA_SIMBOLOS *ts, float a, char* name){
+void updateVarFloat(TABLA_SIMBOLOS *ts, double a, char* name){
 	NODO *actual;
 	for(actual = ts -> inicio; actual != NULL ; actual = actual -> siguiente)
 		if(mystrcmp(actual -> name, name)){
@@ -238,9 +238,9 @@ NODO crearNodoInt(int a, char* name){
 	return *n;
 }
 
-NODO crearNodoFloat(float a, char* name){
+NODO crearNodoFloat(double a, char* name){
 	NODO *n = (NODO *) malloc(sizeof(NODO));
-	n -> type = MYFLOAT;
+	n -> type = MYDOUBLE;
 	n -> name = (char*) malloc(sizeof(char) * tam(name));
 	mystrcpy2(n->name, name, 0, tam(name));
 	n -> tipo1 = 0;
@@ -317,7 +317,7 @@ void copiarNodo(TABLA_SIMBOLOS *ts, char *name, void* a){
 		}
 		else if(udt_nodo->type == 2){
 			if(na->type == 1)
-				udt_nodo -> tipo2 =(float) na -> tipo1;
+				udt_nodo -> tipo2 =(double) na -> tipo1;
 			else
 				udt_nodo -> tipo2 = na -> tipo2;
 		}
@@ -342,6 +342,7 @@ void copiarNodo(TABLA_SIMBOLOS *ts, char *name, void* a){
 
 void* menosVariable(TABLA_SIMBOLOS *ts,char* name){
 	NODO *na = (NODO *) getVar(ts, name); 
+	if(na == NULL) return NULL;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
 
 	if(na -> type == 1){
@@ -350,7 +351,28 @@ void* menosVariable(TABLA_SIMBOLOS *ts,char* name){
 		return (void*) result;
 	}
 	else if(na -> type == 2){
-		result -> type = MYFLOAT;
+		result -> type = MYDOUBLE;
+		result -> tipo2 = -1.0 * na->tipo2;
+		return (void*) result;
+	}
+	else{
+		printf(amarillo"Incompatible operands\n"cerrar);
+		return NULL;
+	}
+}
+
+void* menosExpVariable(void* name){
+	NODO *na = (NODO *) getVarWithoutName(name); 
+	if(na == NULL) {return NULL;}
+	NODO* result = (NODO*) malloc(sizeof(NODO));
+
+	if(na -> type == 1){
+		result -> type = MYINT;
+		result -> tipo1 = -1 * na->tipo1;
+		return (void*) result;
+	}
+	else if(na -> type == 2){
+		result -> type = MYDOUBLE;
 		result -> tipo2 = -1.0 * na->tipo2;
 		return (void*) result;
 	}
@@ -373,20 +395,20 @@ void* variableMasVariable(void* a, void* b){
 		return (void*) result;
 	}
 	else if(na -> type == 1 && nb -> type == 2){
-		result -> type = MYFLOAT;
-		float a = (na->tipo1) + (nb->tipo2);
+		result -> type = MYDOUBLE;
+		double a = (na->tipo1) + (nb->tipo2);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
 	else if(na -> type == 2 && nb -> type == 1){
-		result -> type = MYFLOAT;
-		float a = (na->tipo2) + (nb->tipo1);
+		result -> type = MYDOUBLE;
+		double a = (na->tipo2) + (nb->tipo1);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
 	else if(na -> type == 2 && nb -> type == 2){
-		result -> type = MYFLOAT;
-		float a = (na->tipo2) + (nb->tipo2);
+		result -> type = MYDOUBLE;
+		double a = (na->tipo2) + (nb->tipo2);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
@@ -397,7 +419,7 @@ void* variableMasVariable(void* a, void* b){
 		return (void*) result;
 	}
 	else{
-		printf(amarillo"Incompatible operands\n"cerrar);
+		printf(amarillo"Incompatible operands 1\n"cerrar);
 		return NULL;
 	}
 }
@@ -415,20 +437,20 @@ void* variableMenosVariable(void* a, void* b){
 		return (void*) result;
 	}
 	else if(na -> type == 1 && nb -> type == 2){
-		result -> type = MYFLOAT;
-		float a = (na->tipo1) - (nb->tipo2);
+		result -> type = MYDOUBLE;
+		double a = (na->tipo1) - (nb->tipo2);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
 	else if(na -> type == 2 && nb -> type == 1){
-		result -> type = MYFLOAT;
-		float a = (na->tipo2) - (nb->tipo1);
+		result -> type = MYDOUBLE;
+		double a = (na->tipo2) - (nb->tipo1);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
 	else if(na -> type == 2 && nb -> type == 2){
-		result -> type = MYFLOAT;
-		float a = (na->tipo2) - (nb->tipo2);
+		result -> type = MYDOUBLE;
+		double a = (na->tipo2) - (nb->tipo2);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
@@ -457,20 +479,20 @@ void* variablePorVariable(void* a, void* b){
 		return (void*) result;
 	}
 	else if(na -> type == 1 && nb -> type == 2){
-		result -> type = MYFLOAT;
-		float a = (na->tipo1) * (nb->tipo2);
+		result -> type = MYDOUBLE;
+		double a = (na->tipo1) * (nb->tipo2);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
 	else if(na -> type == 2 && nb -> type == 1){
-		result -> type = MYFLOAT;
-		float a = (na->tipo2) * (nb->tipo1);
+		result -> type = MYDOUBLE;
+		double a = (na->tipo2) * (nb->tipo1);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
 	else if(na -> type == 2 && nb -> type == 2){
-		result -> type = MYFLOAT;
-		float a = (na->tipo2) * (nb->tipo2);
+		result -> type = MYDOUBLE;
+		double a = (na->tipo2) * (nb->tipo2);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
@@ -493,20 +515,20 @@ void* variableDivVariable(void* a, void* b){
 		return (void*) result;
 	}
 	else if(na -> type == 1 && nb -> type == 2){
-		result -> type = MYFLOAT;
-		float a = (na->tipo1) / (nb->tipo2);
+		result -> type = MYDOUBLE;
+		double a = (na->tipo1) / (nb->tipo2);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
 	else if(na -> type == 2 && nb -> type == 1){
-		result -> type = MYFLOAT;
-		float a = (na->tipo2) / (nb->tipo1);
+		result -> type = MYDOUBLE;
+		double a = (na->tipo2) / (nb->tipo1);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
 	else if(na -> type == 2 && nb -> type == 2){
-		result -> type = MYFLOAT;
-		float a = (na->tipo2) / (nb->tipo2);
+		result -> type = MYDOUBLE;
+		double a = (na->tipo2) / (nb->tipo2);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
@@ -529,8 +551,8 @@ void* variablePowVariable(void* a, void* b){
 		return (void*) result;
 	}
 	else if(na -> type == 2 && nb -> type == 1){
-		result -> type = MYFLOAT;
-		float a = pow_num(na->tipo2, nb->tipo1);
+		result -> type = MYDOUBLE;
+		double a = pow_num(na->tipo2, nb->tipo1);
 		result -> tipo2 = a;
 		return (void*) result;
 	}
@@ -546,6 +568,30 @@ void* variablePowVariable(void* a, void* b){
 	}
 }
 
+void* variableModVariable(void* a, void* b){
+	if(a == NULL || b == NULL){ return NULL;  }
+	NODO* na = (NODO *) a;
+	NODO* nb = (NODO *) b;
+	NODO* result = (NODO*) malloc(sizeof(NODO));
+	if(na -> type == 1 && nb -> type == 1){
+		if(na->tipo1 >= 0 && nb->tipo1 > 0){
+			result -> type = MYINT;
+			int a = na->tipo1 % nb->tipo1;
+			result -> tipo1 = a;
+			return (void*) result;
+		}
+		else{
+			printf(rojo"Cannot divide by zero. Mod only works for positives\n"cerrar);
+			return NULL;
+		}
+	}
+	else{
+		printf(amarillo"Incompatible operands\n"cerrar);
+		return NULL;
+	}
+
+}
+
 void* variableMasEntero(void* a, int b){
 	if(a == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
@@ -558,8 +604,8 @@ void* variableMasEntero(void* a, int b){
 		return (void*) result;
 	}
 	else if(na -> type == 2){
-		result -> type = MYFLOAT;
-		float a = (na->tipo2) + b;
+		result -> type = MYDOUBLE;
+		double a = (na->tipo2) + b;
 		result -> tipo2 = a;
 		return (void*) result;
 	}
@@ -569,20 +615,20 @@ void* variableMasEntero(void* a, int b){
 	}
 }
 
-void* variableMasFloat(void* a,float b){
+void* variableMasFloat(void* a,double b){
 	if(a == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
 
 	if(na -> type == 1){
-		result -> type = MYFLOAT;
-		float a = (na->tipo1) + b;
+		result -> type = MYDOUBLE;
+		double a = (na->tipo1) + b;
 		result -> tipo2 = a;
 		return (void*) result;
 	}
 	else if(na -> type == 2){
-		result -> type = MYFLOAT;
-		float a = (na->tipo2) + b;
+		result -> type = MYDOUBLE;
+		double a = (na->tipo2) + b;
 		result -> tipo2 = a;
 		return (void*) result;
 	}
@@ -631,8 +677,8 @@ void* variableMenosEntero(void* a, int b, int s){
 		return (void*) result;
 	}
 	else if(na -> type == 2){
-		result -> type = MYFLOAT;
-		float a;
+		result -> type = MYDOUBLE;
+		double a;
 		if(s)
 			a = (na->tipo2) - b;
 		else
@@ -646,14 +692,14 @@ void* variableMenosEntero(void* a, int b, int s){
 	}
 }
 
-void* variableMenosFloat(void* a,float b, int s){
+void* variableMenosFloat(void* a,double b, int s){
 	if(a == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
 
 	if(na -> type == 1){
-		result -> type = MYFLOAT;
-		float a;
+		result -> type = MYDOUBLE;
+		double a;
 		if(s)
 			a = (na->tipo1) - b;
 		else
@@ -662,8 +708,8 @@ void* variableMenosFloat(void* a,float b, int s){
 		return (void*) result;
 	}
 	else if(na -> type == 2){
-		result -> type = MYFLOAT;
-		float a;
+		result -> type = MYDOUBLE;
+		double a;
 		if(s)
 			a = (na->tipo2) - b;
 		else
@@ -712,8 +758,8 @@ void* variablePorEntero(void* a, int b){
 		return (void*) result;
 	}
 	else if(na -> type == 2){
-		result -> type = MYFLOAT;
-		float a = (na->tipo2) * b;
+		result -> type = MYDOUBLE;
+		double a = (na->tipo2) * b;
 		result -> tipo2 = a;
 		return (void*) result;
 	}
@@ -723,20 +769,20 @@ void* variablePorEntero(void* a, int b){
 	}
 }	
 
-void* variablePorFloat(void* a, float b){
+void* variablePorFloat(void* a, double b){
 	if(a == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
 
 	if(na -> type == 1){
-		result -> type = MYFLOAT;
-		float a = (float) (na->tipo1) * b;
+		result -> type = MYDOUBLE;
+		double a = (double) (na->tipo1) * b;
 		result -> tipo2 = a;
 		return (void*) result;
 	}
 	else if(na -> type == 2){
-		result -> type = MYFLOAT;
-		float a = (na->tipo2) * b;
+		result -> type = MYDOUBLE;
+		double a = (na->tipo2) * b;
 		result -> tipo2 = a;
 		return (void*) result;
 	}
@@ -762,8 +808,8 @@ void* variableDivEntero(void* a, int b, int s){
 		return (void*) result;
 	}
 	else if(na -> type == 2){
-		result -> type = MYFLOAT;
-		float a;
+		result -> type = MYDOUBLE;
+		double a;
 		if(s)
 			a = (na->tipo2) / b;
 		else
@@ -777,24 +823,24 @@ void* variableDivEntero(void* a, int b, int s){
 	}	
 }
 
-void* variableDivFloat(void* a, float b, int s){
+void* variableDivFloat(void* a, double b, int s){
 	if(a == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* result = (NODO*) malloc(sizeof(NODO));
 
 	if(na -> type == 1){
-		result -> type = MYFLOAT;
-		float a;
+		result -> type = MYDOUBLE;
+		double a;
 		if(s)
-			a = (float) (na->tipo1) / b;
+			a = (double) (na->tipo1) / b;
 		else
-			a = (float) b / (na->tipo1);
+			a = (double) b / (na->tipo1);
 		result -> tipo2 = a;	
 		return (void*) result;
 	}
 	else if(na -> type == 2){
-		result -> type = MYFLOAT;
-		float a;
+		result -> type = MYDOUBLE;
+		double a;
 		if(s)
 			a = (na->tipo2) / b;
 		else
@@ -802,6 +848,37 @@ void* variableDivFloat(void* a, float b, int s){
 		result -> tipo2 = a;	
 		return (void*) result;
 	}
+	else{
+		printf(amarillo"Incompatible operands\n"cerrar);
+		return NULL;
+	}
+}
+
+void* variableModuEntero(void* a, int b, int s){
+	if(a == NULL){ return NULL;  }
+	NODO* na = (NODO *) a;
+	NODO* result = (NODO*) malloc(sizeof(NODO));
+
+	if(na -> type == 1){
+		result -> type = MYINT;
+		if(s){
+			if(na->tipo1 >= 0 && b > 0)
+				result->tipo1 = na->tipo1 % b;
+			else{
+				printf(amarillo" (int >= 0) %c (int > 0)\n"cerrar,'%');
+				return NULL;
+			}
+		}
+		else{
+			if(na->tipo1 > 0 && b >= 0)
+				result->tipo1 = b % na->tipo1;
+			else{
+				printf(amarillo" (int >= 0) %c (int > 0)\n"cerrar,'%');
+				return NULL;
+			}
+		}
+		return (void *) result;
+	}	
 	else{
 		printf(amarillo"Incompatible operands\n"cerrar);
 		return NULL;
@@ -824,8 +901,8 @@ void* variablePowEntero(void* a, int b, int s){
 		return (void*) result;
 	}
 	else if(na -> type == 2){
-		result -> type = MYFLOAT;
-		float a;
+		result -> type = MYDOUBLE;
+		double a;
 		if(s)
 			a = pow_num(na->tipo2, b);
 		else{
@@ -854,7 +931,7 @@ void* variablePowEntero(void* a, int b, int s){
 	}
 }
 
-void* variablePowFloat(void* a, float b){
+void* variablePowFloat(void* a, double b){
 	if(a == NULL){ return NULL;  }
 	NODO* na = (NODO *) a;
 	NODO* result = (NODO*) malloc(sizeof(NODO));

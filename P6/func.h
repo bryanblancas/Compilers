@@ -1,7 +1,7 @@
 #ifndef FUNCIONES
 #define FUNCIONES
 #define MYINT 1
-#define MYFLOAT 2
+#define MYDOUBLE 2
 #define MYSTRING 3
 #define azul "\x1B[36m"
 #define rojo "\033[0;31m"
@@ -12,7 +12,7 @@ typedef struct nodo{
 	int type;
 	char* name;
 	int tipo1;
-	float tipo2;
+	double tipo2;
 	char* tipo3;
 	struct nodo* siguiente;
 } NODO;
@@ -40,7 +40,7 @@ void mystrcpy2(char* a, char *b, int inicio, int final);
 //retorna el valor absoluto de a
 int val_abs(int a);
 //retorna a elevado a la b
-float pow_num(float a, int b);
+double pow_num(double a, int b);
 
 
 
@@ -53,14 +53,14 @@ void insertarNodo(TABLA_SIMBOLOS *ts,NODO n);
 int vacia(TABLA_SIMBOLOS *ts);
 //Crea un nuevo nodo de una variable int
 NODO crearNodoInt(int a, char* name);
-//Crea un nuevo nodo de una variable float
-NODO crearNodoFloat(float a, char* name);
+//Crea un nuevo nodo de una variable double
+NODO crearNodoFloat(double a, char* name);
 //Crea un nuevo nodo de una variable string
 NODO crearNodoString(char *a, char* name);
 //Actualiza el valor de una variable int
 void updateVarInt(TABLA_SIMBOLOS *ts, int a, char* name);
-//Actualiza el valor de una variable float
-void updateVarFloat(TABLA_SIMBOLOS *ts, float a, char* name);
+//Actualiza el valor de una variable double
+void updateVarFloat(TABLA_SIMBOLOS *ts, double a, char* name);
 //Actualiza el valor de una variable string
 void updateVarString(TABLA_SIMBOLOS *ts, char* a, char* name);
 //Retorna un 1 si existe la variable
@@ -69,8 +69,8 @@ int existeVar(TABLA_SIMBOLOS *ts, char* name);
 int getType(TABLA_SIMBOLOS *ts, char *a);
 //Retorna el valor de una variable int
 int getIntValue(TABLA_SIMBOLOS *ts, char *name);
-//Retorna el valor de una variable float
-float getFloatValue(TABLA_SIMBOLOS *ts, char *name);
+//Retorna el valor de una variable double
+double getFloatValue(TABLA_SIMBOLOS *ts, char *name);
 //Retorna el valor de una variable string
 char* getStringValue(TABLA_SIMBOLOS *ts, char *name);
 //Retorna 1 si las cadenas son iguales
@@ -87,28 +87,32 @@ void copiarNodo(TABLA_SIMBOLOS *ts, char *name, void* a);
 //OPERACIONES DE VARIABLES
 //Retorna un nuevo nodo con el resultado de la operación
 void* menosVariable(TABLA_SIMBOLOS *ts, char* a);
+void* menosExpVariable(void* name);
 void* variableMasVariable(void* a, void* b);
 void* variableMenosVariable(void* a, void* b);
 void* variablePorVariable(void* a, void* b);
 void* variableDivVariable(void* a, void* b);
 void* variablePowVariable(void* a, void* b);
+void* variableModVariable(void* a, void* b);
 
 void* variableMasEntero(void* a, int b);
-void* variableMasFloat(void* a,float b);
+void* variableMasFloat(void* a,double b);
 void* variableMasStr(void* a, char* b, int s);
 
 void* variableMenosEntero(void* a, int b, int s);
-void* variableMenosFloat(void* a,float b, int s);
+void* variableMenosFloat(void* a,double b, int s);
 void* variableMenosStr(void* a, char* b, int s);
 
 void* variablePorEntero(void* a, int b);
-void* variablePorFloat(void* a, float b);
+void* variablePorFloat(void* a, double b);
 
 void* variableDivEntero(void* a, int b, int s);
-void* variableDivFloat(void* a, float b, int s);
+void* variableDivFloat(void* a, double b, int s);
+
+void* variableModuEntero(void* a, int b, int s);
 
 void* variablePowEntero(void* a, int b, int s);
-void* variablePowFloat(void* a, float b);
+void* variablePowFloat(void* a, double b);
 void* strPowVariable(void* a, char *b);
 
 #endif
