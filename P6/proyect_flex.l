@@ -25,6 +25,7 @@ int 		{	return (TIPO1);}
 double 		{	return (TIPO2);}
 string 		{	return (TIPO3);}
 pow			{	return (POW);}
+if 			{	return (IF);}
 
 [A-Za-z_]{VARIABLE} 	{
 							char *cad = (char*) malloc(sizeof(char) * (yyleng));
@@ -49,6 +50,8 @@ pow			{	return (POW);}
 ";"         {	return (PTOCOMA);}
 "("			{	return (PARABRE);}
 ")"			{	return (PARCIERRA);}
+"<"			{	return (MENORQUE);}
+">"			{	return (MAYORQUE);}
 "\n"		{	return (SALTOLINE);}
 
 " "			{}

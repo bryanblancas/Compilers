@@ -115,4 +115,8 @@ void* variablePowEntero(void* a, int b, int s);
 void* variablePowFloat(void* a, double b);
 void* strPowVariable(void* a, char *b);
 
+int variableCompVariable(void *a, void *b, int comp);
+int variableCompEntero(void *a, int b, int comp, int s);
+int variableCompDouble(void *a, double b, int comp, int s);
+
 #endif

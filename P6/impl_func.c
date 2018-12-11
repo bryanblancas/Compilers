@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "func.h"
-
+ 
 //Funciones utilizadas en proyect_bison.y
 
 void pow_cad(char *a, char *b, int potencia){
@@ -916,7 +916,7 @@ void* variablePowEntero(void* a, int b, int s){
 	else if(na -> type == 3){
 		result -> type = MYSTRING;
 		if(s){
-			result -> tipo3 = (char *) malloc(sizeof(char) * tam(na->tipo3) + 1);
+			result -> tipo3 = (char *) malloc(sizeof(char) * tam(na->tipo3) * val_abs(b) + 1);
 	        pow_cad(result -> tipo3, na->tipo3, b);
 	    }
 	    else{
@@ -962,5 +962,340 @@ void* strPowVariable(void* a, char *b){
 	else{
 		printf(amarillo"Incompatible operands, pow(element, int)\n"cerrar);
 		return NULL;
+	}
+}
+
+
+int variableCompVariable(void *a, void *b, int comp){
+	if(a == NULL || b == NULL){ printf(amarillo" ERROR EN VARIABLE COMP VARIABLE"cerrar);}
+	NODO* na = (NODO *) a;
+	NODO* nb = (NODO *) b;
+
+	if(comp == 1){
+		if(na->type == 1 && nb->type == 1){
+			if(na->tipo1 < nb->tipo1)
+				return 1;
+			else
+				return 0;
+		}
+		else if(na->type == 1 && nb->type == 2){
+			if(na->tipo1 < nb->tipo2)
+				return 1;
+			else
+				return 0;
+		}
+		else if(na->type == 2 && nb->type == 1){
+			if(na->tipo2 < nb->tipo1)
+				return 1;
+			else
+				return 0;
+		}
+		else if(na->type == 2 && nb->type == 2){
+			if(na->tipo2 < nb->tipo2)
+				return 1;
+			else
+				return 0;
+		}
+		else{
+			if(na->type == 3 && nb->type != 3){
+				printf("string vs no string\n");
+			}
+			else if(na->type != 3 && nb->type == 3){
+				printf("no string vs string\n");
+			}
+			else{
+				if(tam(na->tipo3) < tam(nb->tipo3))
+					return 1;
+				else
+					return 0;
+			}
+		}
+	}
+	else if(comp == 2){
+		if(na->type == 1 && nb->type == 1){
+			if(na->tipo1 > nb->tipo1)
+				return 1;
+			else
+				return 0;
+		}
+		else if(na->type == 1 && nb->type == 2){
+			if(na->tipo1 > nb->tipo2)
+				return 1;
+			else
+				return 0;
+		}
+		else if(na->type == 2 && nb->type == 1){
+			if(na->tipo2 > nb->tipo1)
+				return 1;
+			else
+				return 0;
+		}
+		else if(na->type == 2 && nb->type == 2){
+			if(na->tipo2 > nb->tipo2)
+				return 1;
+			else
+				return 0;
+		}
+		else{
+			if(na->type == 3 && nb->type != 3){
+				printf("string vs no string\n");
+			}
+			else if(na->type != 3 && nb->type == 3){
+				printf("no string vs string\n");
+			}
+			else{
+				if(tam(na->tipo3) > tam(nb->tipo3))
+					return 1;
+				else
+					return 0;
+			}
+		}
+	}
+	else if(comp == 3){
+		if(na->type == 1 && nb->type == 1){
+			if(na->tipo1 == nb->tipo1)
+				return 1;
+			else
+				return 0;
+		}
+		else if(na->type == 1 && nb->type == 2){
+			if(na->tipo1 == nb->tipo2)
+				return 1;
+			else
+				return 0;
+		}
+		else if(na->type == 2 && nb->type == 1){
+			if(na->tipo2 == nb->tipo1)
+				return 1;
+			else
+				return 0;
+		}
+		else if(na->type == 2 && nb->type == 2){
+			if(na->tipo2 == nb->tipo2)
+				return 1;
+			else
+				return 0;
+		}
+		else{
+			if(na->type == 3 && nb->type != 3){
+				printf("string vs no string\n");
+			}
+			else if(na->type != 3 && nb->type == 3){
+				printf("no string vs string\n");
+			}
+			else{
+				if(tam(na->tipo3) == tam(nb->tipo3))
+					return 1;
+				else
+					return 0;
+			}
+		}
+	}
+}
+
+int variableCompEntero(void *a, int b, int comp, int s){
+	if(a == NULL){ printf(amarillo" ERROR EN VARIABLE COMP VARIABLE"cerrar);}
+	NODO* na = (NODO *) a;
+
+	if(comp == 1){
+		if(na->type == 1){
+			if(s){
+				if(na->tipo1 < b)
+					return 1;
+				else
+					return 0;
+			}
+			else{
+				if(b < na->tipo1)
+					return 1;
+				else
+					return 0;
+			}
+		}
+		else if(na->type == 2){
+			if(s){
+				if(na->tipo2 < b)
+					return 1;
+				else
+					return 0;
+			}
+			else{
+				if(b < na->tipo2)
+					return 1;
+				else
+					return 0;
+			}
+		}
+		else{
+			if(s){
+				if(tam(na->tipo3) < b)
+					return 1;
+				else
+					return 0;
+			}
+			else{
+				if(b < tam(na->tipo3))
+					return 1;
+				else
+					return 0;
+			}
+		}
+	}
+	else if(comp == 2){
+		if(na->type == 1){
+			if(s){
+				if(na->tipo1 > b)
+					return 1;
+				else
+					return 0;
+			}
+			else{
+				if(b > na->tipo1)
+					return 1;
+				else
+					return 0;
+			}
+		}
+		else if(na->type == 2){
+			if(s){
+				if(na->tipo2 > b)
+					return 1;
+				else
+					return 0;
+			}
+			else{
+				if(b > na->tipo2)
+					return 1;
+				else
+					return 0;
+			}
+		}
+	}
+	else if(comp == 3){
+		if(na->type == 1){
+			if(s){
+				if(na->tipo1 == b)
+					return 1;
+				else
+					return 0;
+			}
+			else{
+				if(b == na->tipo1)
+					return 1;
+				else
+					return 0;
+			}
+		}
+		else if(na->type == 2){
+			if(s){
+				if(na->tipo2 == b)
+					return 1;
+				else
+					return 0;
+			}
+			else{
+				if(b == na->tipo2)
+					return 1;
+				else
+					return 0;
+			}
+		}
+	}
+}
+
+int variableCompDouble(void *a, double b, int comp, int s){
+	if(a == NULL){ printf(amarillo" ERROR EN VARIABLE COMP VARIABLE"cerrar);}
+	NODO* na = (NODO *) a;
+
+	if(comp == 1){
+		if(na->type == 1){
+			if(s){
+				if(na->tipo1 < b)
+					return 1;
+				else
+					return 0;
+			}
+			else{
+				if(b < na->tipo1)
+					return 1;
+				else
+					return 0;
+			}
+		}
+		else if(na->type == 2){
+			if(s){
+				if(na->tipo2 < b)
+					return 1;
+				else
+					return 0;
+			}
+			else{
+				if(b < na->tipo2)
+					return 1;
+				else
+					return 0;
+			}
+		}
+		//falta el tipo 3
+	}
+	else if(comp == 2){
+		if(na->type == 1){
+			if(s){
+				if(na->tipo1 > b)
+					return 1;
+				else
+					return 0;
+			}
+			else{
+				if(b > na->tipo1)
+					return 1;
+				else
+					return 0;
+			}
+		}
+		else if(na->type == 2){
+			if(s){
+				if(na->tipo2 > b)
+					return 1;
+				else
+					return 0;
+			}
+			else{
+				if(b > na->tipo2)
+					return 1;
+				else
+					return 0;
+			}
+		}
+	}
+	else if(comp == 3){
+		if(na->type == 1){
+			if(s){
+				if(na->tipo1 == b)
+					return 1;
+				else
+					return 0;
+			}
+			else{
+				if(b == na->tipo1)
+					return 1;
+				else
+					return 0;
+			}
+		}
+		else if(na->type == 2){
+			if(s){
+				if(na->tipo2 == b)
+					return 1;
+				else
+					return 0;
+			}
+			else{
+				if(b == na->tipo2)
+					return 1;
+				else
+					return 0;
+			}
+		}
 	}
 }

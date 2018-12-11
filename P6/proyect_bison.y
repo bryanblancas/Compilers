@@ -43,6 +43,9 @@
 %token PARCIERRA
 %token IGUAL
 %token COMA
+%token MENORQUE
+%token MAYORQUE
+%token IF
 %token SALTOLINE
 //1:int  2:double  3:string
 %token TIPO1
@@ -60,6 +63,8 @@
 %type <string> cadena_pow
 //VarNoTerminal de OPERACIÓN DE VARIABLES
 %type <var> exp_variable
+
+%type <entero> exp_if
 
 //PRECEDENCIA
 %left MAS MENOS
@@ -91,6 +96,7 @@ input:    /*CADENA VACÍA*/
   |       input errores 
   |       PTOCOMA SALTOLINE                     { printf(amarillo"Expected arguments\n"cerrar);}
   |       SALTOLINE                             { printf(amarillo"Expected arguments\n"cerrar);}
+  |       input exp_if PTOCOMA SALTOLINE        { printf(azul">> %s\n"cerrar, $2?"TRUE":"FALSE");}
 ;
 
 //VarNoTerminal de las operaciones aritméticas, para ver cuando acaba e imprimirla
@@ -161,7 +167,206 @@ errores:      TIPO1 VARIABLE SALTOLINE    { printf(amarillo"Expected ;\n"cerrar)
     |         POW PARABRE exp_decimal COMA exp_decimal PARCIERRA      { printf(amarillo"Invalid arguments, use pow(element, int); \n"cerrar);}
     |         POW PARABRE exp_decimal COMA cadena_pow PARCIERRA       { printf(amarillo"Invalid arguments, use pow(element, int); \n"cerrar);}
     |         POW PARABRE exp_decimal COMA str PARCIERRA              { printf(amarillo"Invalid arguments, use pow(element, int); \n"cerrar);}
+
 ;
+
+
+exp_if:   IF PARABRE exp_entera MENORQUE exp_entera PARCIERRA    {
+                                                                  if( $3 < $5)
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }
+  |   IF  PARABRE exp_entera MAYORQUE exp_entera PARCIERRA       {
+                                                                  if( $3 > $5)
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }                                     
+  |   IF  PARABRE exp_entera IGUAL IGUAL exp_entera PARCIERRA    {
+                                                                  if( $3 == $6)
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                } 
+  |   IF PARABRE exp_entera MENORQUE exp_decimal PARCIERRA       {
+                                                                  if( $3 < $5)
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }
+  |   IF  PARABRE exp_entera MAYORQUE exp_decimal PARCIERRA      {
+                                                                  if( $3 > $5)
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }                                     
+  |   IF  PARABRE exp_entera IGUAL IGUAL exp_decimal PARCIERRA   {
+                                                                  if( $3 == $6)
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }   
+  |   IF PARABRE exp_decimal MENORQUE exp_entera PARCIERRA       {
+                                                                  if( $3 < $5)
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }
+  |   IF  PARABRE exp_decimal MAYORQUE exp_entera PARCIERRA      {
+                                                                  if( $3 > $5)
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }                                     
+  |   IF  PARABRE exp_decimal IGUAL IGUAL exp_entera PARCIERRA   {
+                                                                  if( $3 == $6)
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }  
+  |   IF PARABRE exp_decimal MENORQUE exp_decimal PARCIERRA       {
+                                                                  if( $3 < $5)
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }
+  |   IF  PARABRE exp_decimal MAYORQUE exp_decimal PARCIERRA      {
+                                                                  if( $3 > $5)
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }                                     
+  |   IF  PARABRE exp_decimal IGUAL IGUAL exp_decimal PARCIERRA   {
+                                                                  if( $3 == $6)
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }
+
+//CADENAS                                                                
+  |   IF PARABRE str MENORQUE str PARCIERRA       {
+                                                                  if( tam($3) < tam($5))
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }
+  |   IF  PARABRE str MAYORQUE str PARCIERRA      {
+                                                                  if( tam($3) > tam($5))
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }                                     
+  |   IF  PARABRE str IGUAL IGUAL str PARCIERRA   {
+                                                                  if( tam($3) == tam($6))
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }
+  |   IF PARABRE str MENORQUE cadena_pow PARCIERRA       {
+                                                                  if( tam($3) < tam($5))
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }
+  |   IF  PARABRE str MAYORQUE cadena_pow PARCIERRA      {
+                                                                  if( tam($3) > tam($5))
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }                                     
+  |   IF  PARABRE str IGUAL IGUAL cadena_pow PARCIERRA   {
+                                                                  if( tam($3) == tam($6))
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                } 
+  |   IF PARABRE cadena_pow MENORQUE str PARCIERRA       {
+                                                                  if( tam($3) < tam($5))
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }
+  |   IF  PARABRE cadena_pow MAYORQUE str PARCIERRA      {
+                                                                  if( tam($3) > tam($5))
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }                                     
+  |   IF  PARABRE cadena_pow IGUAL IGUAL str PARCIERRA   {
+                                                                  if( tam($3) == tam($6))
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }
+  |   IF PARABRE cadena_pow MENORQUE cadena_pow PARCIERRA       {
+                                                                  if( tam($3) < tam($5))
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }
+  |   IF  PARABRE cadena_pow MAYORQUE cadena_pow PARCIERRA      {
+                                                                  if( tam($3) > tam($5))
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }                                     
+  |   IF  PARABRE cadena_pow IGUAL IGUAL cadena_pow PARCIERRA   {
+                                                                  if( tam($3) == tam($6))
+                                                                    $$ = 1;
+                                                                  else
+                                                                    $$ = 0;
+                                                                }                                                                                                                                                                                                
+
+//VARIABLES                                                                
+
+  |   IF PARABRE exp_variable MENORQUE exp_variable PARCIERRA      {
+                                                                    $$ = variableCompVariable($3, $5, 1);
+                                                                  }        
+  |   IF PARABRE exp_variable MAYORQUE exp_variable PARCIERRA      {
+                                                                    $$ = variableCompVariable($3, $5, 2);
+                                                                  }                                   
+  |   IF PARABRE exp_variable IGUAL IGUAL exp_variable PARCIERRA   {
+                                                                    $$ = variableCompVariable($3, $6, 3);
+                                                                  } 
+  |   IF PARABRE exp_variable MENORQUE exp_entera PARCIERRA      {
+                                                                    $$ = variableCompEntero($3, $5, 1, 1);
+                                                                  }        
+  |   IF PARABRE exp_variable MAYORQUE exp_entera PARCIERRA      {
+                                                                    $$ = variableCompEntero($3, $5, 2, 1);
+                                                                  }                                   
+  |   IF PARABRE exp_variable IGUAL IGUAL exp_entera PARCIERRA   {
+                                                                    $$ = variableCompEntero($3, $6, 3, 1);
+                                                                  }  
+  |   IF PARABRE exp_entera MENORQUE exp_variable PARCIERRA      {
+                                                                    $$ = variableCompEntero($5, $3, 1, 0);
+                                                                  }        
+  |   IF PARABRE exp_entera MAYORQUE exp_variable PARCIERRA      {
+                                                                    $$ = variableCompEntero($5, $3, 2, 0);
+                                                                  }                                   
+  |   IF PARABRE exp_entera IGUAL IGUAL exp_variable PARCIERRA   {
+                                                                    $$ = variableCompEntero($6, $3, 3, 0);
+                                                                  } 
+  |   IF PARABRE exp_variable MENORQUE exp_decimal PARCIERRA      {
+                                                                    $$ = variableCompDouble($3, $5, 1, 1);
+                                                                  }        
+  |   IF PARABRE exp_variable MAYORQUE exp_decimal PARCIERRA      {
+                                                                    $$ = variableCompDouble($3, $5, 2, 1);
+                                                                  }                                   
+  |   IF PARABRE exp_variable IGUAL IGUAL exp_decimal PARCIERRA   {
+                                                                    $$ = variableCompDouble($3, $6, 3, 1);
+                                                                  }  
+  |   IF PARABRE exp_decimal MENORQUE exp_variable PARCIERRA      {
+                                                                    $$ = variableCompDouble($5, $3, 1, 0);
+                                                                  }        
+  |   IF PARABRE exp_decimal MAYORQUE exp_variable PARCIERRA      {
+                                                                    $$ = variableCompDouble($5, $3, 2, 0);
+                                                                  }                                   
+  |   IF PARABRE exp_decimal IGUAL IGUAL exp_variable PARCIERRA   {
+                                                                    $$ = variableCompDouble($6, $3, 3, 0);
+                                                                  }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+;
+         
 
 /**
 **

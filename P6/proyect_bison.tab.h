@@ -60,10 +60,13 @@ extern int yydebug;
     PARCIERRA = 270,
     IGUAL = 271,
     COMA = 272,
-    SALTOLINE = 273,
-    TIPO1 = 274,
-    TIPO2 = 275,
-    TIPO3 = 276
+    MENORQUE = 273,
+    MAYORQUE = 274,
+    IF = 275,
+    SALTOLINE = 276,
+    TIPO1 = 277,
+    TIPO2 = 278,
+    TIPO3 = 279
   };
 #endif
 
@@ -79,7 +82,7 @@ union YYSTYPE
   char* string;
   void* var
 
-#line 83 "proyect_bison.tab.h" /* yacc.c:1909  */
+#line 86 "proyect_bison.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
