@@ -1,0 +1,3 @@
+flex proyect_flex.l
+bison proyect_bison.y -d 
+gcc proyect_bison.tab.c lex.yy.c impl_func.c -lfl -o proyecto.out
